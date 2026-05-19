@@ -16,10 +16,6 @@ input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #ccc;
 .btn { display: block; width: 100%; padding: 14px; background: #4da3ff; color: #fff; border-radius: 10px; text-align: center; text-decoration: none; margin-top: 20px; font-size: 17px; font-weight: bold; border: none; cursor: pointer; }
 </style>
 
-<!-- Firebase v8 CDN -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
 </head>
 <body>
 
@@ -55,8 +51,11 @@ input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #ccc;
 
 </div>
 
+<!-- Firebase v8 CDN -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
 <script>
-// Firebase config
 var firebaseConfig = {
   apiKey: "AIzaSyAoC51qunH31opTG50e92KNFl_fRsFIqqM",
   authDomain: "smarthealth-85876.firebaseapp.com",
@@ -95,6 +94,7 @@ function saveData() {
   });
 }
 </script>
+
 
 </body>
 </html>
