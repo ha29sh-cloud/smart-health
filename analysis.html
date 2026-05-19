@@ -1,1 +1,84 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>التحليل الذكي - صحتي الذكية</title>
+
+<style>
+body { font-family: "Cairo", sans-serif; background: #f4f8ff; margin: 0; padding: 20px; }
+.container { max-width: 480px; margin: auto; background: #fff; padding: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+h2 { text-align: center; color: #1f7ae0; }
+.circle { width: 150px; height: 150px; border-radius: 50%; background: #e8f2ff; border: 6px solid #4da3ff; display: flex; justify-content: center; align-items: center; font-size: 32px; margin: 20px auto; font-weight: bold; color: #1f7ae0; }
+.box { background: #f4f8ff; padding: 14px; border-radius: 12px; margin-bottom: 12px; border-right: 5px solid #4da3ff; }
+.nav { text-align: center; margin-top: 20px; }
+.nav a { display: inline-block; margin: 6px; padding: 10px 16px; background: #4da3ff; color: #fff; border-radius: 8px; text-decoration: none; }
+</style>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAoC51qunH31opTG50e92KNFl_fRsFIqqM",
+  authDomain: "smarthealth-85876.firebaseapp.com",
+  projectId: "smarthealth-85876",
+  storageBucket: "smarthealth-85876.firebasestorage.app",
+  messagingSenderId: "706581803098",
+  appId: "1:706581803098:web:12adcccf9074c95092a863",
+  measurementId: "G-RF69MDJWJ6"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function loadAnalysis() {
+  const uid = localStorage.getItem("uid");
+  const snap = await getDoc(doc(db, "users", uid));
+
+  if (!snap.exists()) return;
+
+  const d = snap.data();
+
+  // حسابات ذكية
+  const fatigue = Math.min(100, 100 - d.sleep * 12);
+  const obesity = Math.min(100, (d.weight / (d.height/100)**2) * 4);
+  const diabetes = d.smoker === "yes" ? 60 : 20;
+  const pressure = Math.min(100, d.sitting * 10);
+
+  const total = Math.max(0, 100 - ((fatigue + obesity + diabetes + pressure) / 4));
+
+  document.getElementById("total").innerText = total.toFixed(0) + "%";
+  document.getElementById("fatigue").innerText = fatigue.toFixed(0) + "%";
+  document.getElementById("obesity").innerText = obesity.toFixed(0) + "%";
+  document.getElementById("diabetes").innerText = diabetes.toFixed(0) + "%";
+  document.getElementById("pressure").innerText = pressure.toFixed(0) + "%";
+}
+
+loadAnalysis();
+</script>
+
+</head>
+<body>
+
+<div class="container">
+
+<h2>التحليل الذكي</h2>
+
+<div class="circle" id="total">--%</div>
+
+<div class="box">إرهاق الجسم: <span id="fatigue">--%</span></div>
+<div class="box">احتمالية السمنة: <span id="obesity">--%</span></div>
+<div class="box">احتمالية السكري: <span id="diabetes">--%</span></div>
+<div class="box">احتمالية الضغط: <span id="pressure">--%</span></div>
+
+<div class="nav">
+  <a href="home.html">الرئيسية</a>
+  <a href="reports.html">التقارير</a>
+  <a href="tips.html">النصائح</a>
+</div>
+
+</div>
+
+</body>
+</html>
 
