@@ -33,6 +33,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// تعريف الحقول
+const age = document.getElementById("age");
+const weight = document.getElementById("weight");
+const height = document.getElementById("height");
+const sleep = document.getElementById("sleep");
+const water = document.getElementById("water");
+const sitting = document.getElementById("sitting");
+
 window.saveData = async function () {
   const uid = localStorage.getItem("uid");
   if (!uid) {
@@ -60,6 +68,7 @@ window.saveData = async function () {
   window.location.href = "dashboard.html";
 };
 </script>
+
 
 </head>
 <body>
