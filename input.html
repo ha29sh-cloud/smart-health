@@ -1,1 +1,101 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>إدخال البيانات - صحتي الذكية</title>
+
+<style>
+body { font-family: "Cairo", sans-serif; background: #f4f8ff; margin: 0; padding: 20px; }
+.container { max-width: 480px; margin: auto; background: #fff; padding: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+h2 { text-align: center; color: #1f7ae0; }
+label { display: block; margin-top: 12px; font-weight: bold; }
+input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #ccc; margin-top: 6px; font-size: 16px; }
+.radio-group { margin-top: 10px; display: flex; gap: 20px; }
+.radio-option { display: flex; align-items: center; gap: 6px; color: #1f7ae0; }
+.radio-option input { width: 20px; height: 20px; accent-color: #4da3ff; }
+.btn { display: block; width: 100%; padding: 14px; background: #4da3ff; color: #fff; border-radius: 10px; text-align: center; text-decoration: none; margin-top: 20px; font-size: 17px; font-weight: bold; }
+</style>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAoC51qunH31opTG50e92KNFl_fRsFIqqM",
+  authDomain: "smarthealth-85876.firebaseapp.com",
+  projectId: "smarthealth-85876",
+  storageBucket: "smarthealth-85876.firebasestorage.app",
+  messagingSenderId: "706581803098",
+  appId: "1:706581803098:web:12adcccf9074c95092a863",
+  measurementId: "G-RF69MDJWJ6"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.saveData = async function () {
+  const uid = localStorage.getItem("uid");
+  if (!uid) {
+    alert("الرجاء تسجيل الدخول أولاً");
+    window.location.href = "login.html";
+    return;
+  }
+
+  const today = new Date().toISOString().split("T")[0];
+
+  const data = {
+    age: age.value,
+    weight: weight.value,
+    height: height.value,
+    sleep: sleep.value,
+    water: water.value,
+    sitting: sitting.value,
+    smoker: document.querySelector("input[name='smoker']:checked")?.value || "",
+    timestamp: Date.now()
+  };
+
+  await setDoc(doc(db, "users", uid, "days", today), data);
+
+  alert("تم حفظ بيانات اليوم بنجاح");
+  window.location.href = "dashboard.html";
+};
+</script>
+
+</head>
+<body>
+
+<div class="container">
+
+<h2>إدخال بيانات اليوم</h2>
+
+<label>العمر</label>
+<input id="age" type="number">
+
+<label>الوزن (كجم)</label>
+<input id="weight" type="number">
+
+<label>الطول (سم)</label>
+<input id="height" type="number">
+
+<label>عدد ساعات النوم</label>
+<input id="sleep" type="number">
+
+<label>لترات الماء</label>
+<input id="water" type="number">
+
+<label>ساعات الجلوس الطويل</label>
+<input id="sitting" type="number">
+
+<label>هل أنت مدخن؟</label>
+<div class="radio-group">
+  <label class="radio-option"><input type="radio" name="smoker" value="yes"> نعم</label>
+  <label class="radio-option"><input type="radio" name="smoker" value="no"> لا</label>
+</div>
+
+<button class="btn" onclick="saveData()">حفظ البيانات</button>
+
+</div>
+
+</body>
+</html>
 
