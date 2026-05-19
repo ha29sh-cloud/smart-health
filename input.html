@@ -13,8 +13,9 @@ input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #ccc;
 .radio-group { margin-top: 10px; display: flex; gap: 20px; }
 .radio-option { display: flex; align-items: center; gap: 6px; color: #1f7ae0; }
 .radio-option input { width: 20px; height: 20px; accent-color: #4da3ff; }
-.btn { display: block; width: 100%; padding: 14px; background: #4da3ff; color: #fff; border-radius: 10px; text-align: center; text-decoration: none; margin-top: 20px; font-size: 17px; font-weight: bold; }
+.btn { display: block; width: 100%; padding: 14px; background: #4da3ff; color: #fff; border-radius: 10px; text-align: center; text-decoration: none; margin-top: 20px; font-size: 17px; font-weight: bold; border: none; cursor: pointer; }
 </style>
+
 </head>
 <body>
 
@@ -48,8 +49,9 @@ input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #ccc;
 
 <button type="button" class="btn" onclick="saveData()">حفظ البيانات</button>
 
-
 </div>
+
+<!-- 🔥 السكربت هنا في المكان الصحيح -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -103,7 +105,5 @@ window.saveData = async function () {
 };
 </script>
 
-
 </body>
 </html>
-
