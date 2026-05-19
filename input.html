@@ -16,6 +16,10 @@ input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #ccc;
 .btn { display: block; width: 100%; padding: 14px; background: #4da3ff; color: #fff; border-radius: 10px; text-align: center; text-decoration: none; margin-top: 20px; font-size: 17px; font-weight: bold; border: none; cursor: pointer; }
 </style>
 
+<!-- Firebase v8 CDN -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
 </head>
 <body>
 
@@ -51,12 +55,9 @@ input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #ccc;
 
 </div>
 
-<!-- 🔥 السكربت هنا في المكان الصحيح -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = {
+<script>
+// Firebase config
+var firebaseConfig = {
   apiKey: "AIzaSyAoC51qunH31opTG50e92KNFl_fRsFIqqM",
   authDomain: "smarthealth-85876.firebaseapp.com",
   projectId: "smarthealth-85876",
@@ -66,18 +67,10 @@ const firebaseConfig = {
   measurementId: "G-RF69MDJWJ6"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+firebase.initializeApp(firebaseConfig);
+var db = firebase.firestore();
 
-// الآن العناصر موجودة لأن السكربت بعد الـ body
-const age = document.getElementById("age");
-const weight = document.getElementById("weight");
-const height = document.getElementById("height");
-const sleep = document.getElementById("sleep");
-const water = document.getElementById("water");
-const sitting = document.getElementById("sitting");
-
-window.saveData = async function () {
+function saveData() {
   const uid = localStorage.getItem("uid");
   if (!uid) {
     alert("الرجاء تسجيل الدخول أولاً");
@@ -87,22 +80,20 @@ window.saveData = async function () {
 
   const today = new Date().toISOString().split("T")[0];
 
-  const data = {
-    age: age.value,
-    weight: weight.value,
-    height: height.value,
-    sleep: sleep.value,
-    water: water.value,
-    sitting: sitting.value,
+  db.collection("users").doc(uid).collection("days").doc(today).set({
+    age: document.getElementById("age").value,
+    weight: document.getElementById("weight").value,
+    height: document.getElementById("height").value,
+    sleep: document.getElementById("sleep").value,
+    water: document.getElementById("water").value,
+    sitting: document.getElementById("sitting").value,
     smoker: document.querySelector("input[name='smoker']:checked")?.value || "",
     timestamp: Date.now()
-  };
-
-  await setDoc(doc(db, "users", uid, "days", today), data);
-
-  alert("تم حفظ البيانات بنجاح");
-  window.location.href = "dashboard.html";
-};
+  }).then(() => {
+    alert("تم حفظ البيانات بنجاح");
+    window.location.href = "dashboard.html";
+  });
+}
 </script>
 
 </body>
