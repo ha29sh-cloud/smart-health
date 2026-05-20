@@ -2,72 +2,416 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>التقارير الصحية - صحتي الذكية</title>
 
+<!-- Cairo Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
 <style>
-body { font-family: "Cairo", sans-serif; background: #f4f8ff; margin: 0; padding: 20px; }
-.container { max-width: 480px; margin: auto; background: #fff; padding: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-h2 { text-align: center; color: #1f7ae0; }
-.box { background: #f4f8ff; padding: 14px; border-radius: 12px; margin-bottom: 12px; border-right: 5px solid #4da3ff; }
-.nav { text-align: center; margin-top: 20px; }
-.nav a { display: inline-block; margin: 6px; padding: 10px 16px; background: #4da3ff; color: #fff; border-radius: 8px; text-decoration: none; }
+:root {
+  --primary: #4f46e5;
+  --bg: #0f172a;
+  --card-bg: rgba(30, 41, 59, 0.7);
+  --border: rgba(255, 255, 255, 0.08);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-emerald: #10b981;
+  --accent-rose: #f43f5e;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Cairo", sans-serif;
+  background: radial-gradient(circle at top right, #1e1b4b 0%, var(--bg) 100%);
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding: 20px 20px 80px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+}
+
+body::before, body::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: 0;
+}
+body::before {
+  width: 250px;
+  height: 250px;
+  background: rgba(79, 70, 229, 0.25);
+  top: 10%;
+  right: 10%;
+}
+body::after {
+  width: 200px;
+  height: 200px;
+  background: rgba(16, 185, 129, 0.15);
+  bottom: 10%;
+  left: 10%;
+}
+
+.container {
+  max-width: 480px;
+  width: 100%;
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  padding: 25px;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.report-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 15px;
+}
+
+.box {
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid var(--border);
+  padding: 18px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s;
+}
+
+.box:hover {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(255,255,255,0.15);
+}
+
+.box-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box-icon.bmi { background: rgba(99, 102, 241, 0.1); color: #6366f1; }
+.box-icon.hydration { background: rgba(56, 189, 248, 0.1); color: #38bdf8; }
+.box-icon.sleep { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+
+.box-content {
+  flex: 1;
+}
+
+.box-title {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.box-value-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.box-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.box-sub {
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+/* Empty state design */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.empty-state i {
+  width: 64px;
+  height: 64px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  opacity: 0.6;
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+  font-size: 15px;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+  color: #fff;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 700;
+  transition: all 0.3s;
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(79, 70, 229, 0.5);
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-around;
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: bold;
+  gap: 4px;
+  transition: color 0.3s;
+  width: 60px;
+}
+
+.nav-item i {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s;
+}
+
+.nav-item:hover {
+  color: #fff;
+}
+
+.nav-item.active {
+  color: #4da3ff;
+  text-shadow: 0 0 10px rgba(77, 163, 255, 0.3);
+}
+
+.nav-item.active i {
+  transform: translateY(-2px);
+}
 </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>التقارير الصحية</h2>
+
+  <!-- Content to be loaded dynamically -->
+  <div id="content">
+    <div style="text-align: center; padding: 40px 0;">
+      <p style="color: var(--text-secondary);">جاري تحميل التقارير...</p>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a href="dashboard.html" class="nav-item">
+    <i data-lucide="layout-dashboard"></i>
+    الرئيسية
+  </a>
+  <a href="analysis.html" class="nav-item">
+    <i data-lucide="brain-circuit"></i>
+    التحليل
+  </a>
+  <a href="reports.html" class="nav-item active">
+    <i data-lucide="clipboard-list"></i>
+    التقارير
+  </a>
+  <a href="tips.html" class="nav-item">
+    <i data-lucide="sparkles"></i>
+    النصائح
+  </a>
+</div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { db } from "./firebase-config.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAoC51qunH31opTG50e92KNFl_fRsFIqqM",
-  authDomain: "smarthealth-85876.firebaseapp.com",
-  projectId: "smarthealth-85876",
-  storageBucket: "smarthealth-85876.firebasestorage.app",
-  messagingSenderId: "706581803098",
-  appId: "1:706581803098:web:12adcccf9074c95092a863",
-  measurementId: "G-RF69MDJWJ6"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const uid = localStorage.getItem("uid");
+if (!uid) {
+  window.location.href = "index.html";
+}
 
 async function loadReport() {
-  const uid = localStorage.getItem("uid");
-  const snap = await getDoc(doc(db, "users", uid));
+  const today = new Date().toISOString().split("T")[0];
 
-  if (!snap.exists()) return;
+  try {
+    const snap = await getDoc(doc(db, "users", uid, "days", today));
 
-  const d = snap.data();
+    if (!snap.exists()) {
+      renderEmptyState();
+      return;
+    }
 
-  const bmi = (d.weight / (d.height/100)**2).toFixed(1);
-  const hydration = (d.water / 3 * 100).toFixed(0);
-  const sleepScore = (d.sleep / 8 * 100).toFixed(0);
+    const d = snap.data();
 
-  document.getElementById("bmi").innerText = bmi;
-  document.getElementById("hydration").innerText = hydration + "%";
-  document.getElementById("sleep").innerText = sleepScore + "%";
+    // Calculations
+    const bmiVal = d.weight / (d.height/100)**2;
+    const bmi = bmiVal.toFixed(1);
+    const hydration = Math.round((d.water / 3) * 100);
+    const sleepScore = Math.round((d.sleep / 8) * 100);
+
+    // BMI Evaluation
+    let bmiClass = "";
+    let bmiColor = "";
+    if (bmiVal < 18.5) {
+      bmiClass = "نقص في الوزن (نحافة)";
+      bmiColor = "#38bdf8"; // Light Blue
+    } else if (bmiVal >= 18.5 && bmiVal <= 24.9) {
+      bmiClass = "وزن مثالي (صحي)";
+      bmiColor = "#10b981"; // Emerald
+    } else if (bmiVal >= 25 && bmiVal <= 29.9) {
+      bmiClass = "زيادة في الوزن";
+      bmiColor = "#f59e0b"; // Amber
+    } else {
+      bmiClass = "سمنة مفرطة";
+      bmiColor = "#f43f5e"; // Rose
+    }
+
+    renderReportContent(bmi, bmiClass, bmiColor, hydration, d.water, sleepScore, d.sleep);
+
+  } catch (err) {
+    console.error("Error loading report:", err);
+    document.getElementById("content").innerHTML = `
+      <div class="empty-state">
+        <i data-lucide="alert-triangle" style="color: #f43f5e;"></i>
+        <p style="color: #f43f5e; font-weight: bold; margin-bottom: 10px;">فشل الاتصال بقاعدة البيانات</p>
+        <p style="font-size: 13px; max-width: 320px; margin: 0 auto 20px auto;">يرجى التأكد من تفعيل قواعد البيانات Firestore Database في لوحة تحكم Firebase وتحديث الصفحة.</p>
+        <a href="https://console.firebase.google.com" target="_blank" class="btn-primary" style="padding: 10px 20px; font-size: 13px;">
+          انتقال إلى لوحة Firebase
+        </a>
+      </div>
+    `;
+    lucide.createIcons();
+  }
+}
+
+function renderEmptyState() {
+  const container = document.getElementById("content");
+  container.innerHTML = `
+    <div class="empty-state">
+      <i data-lucide="clipboard-x"></i>
+      <p>لم يتم إدخال بيانات اليوم حتى الآن. يرجى تزويدنا ببياناتك اليومية لنتمكن من عرض التقارير التفصيلية لحالتك الصحية.</p>
+      <a href="input.html" class="btn-primary">
+        <i data-lucide="plus-circle" style="width: 20px; height: 20px; margin-left: 8px; vertical-align: middle;"></i>
+        إدخال بيانات اليوم
+      </a>
+    </div>
+  `;
+  lucide.createIcons();
+}
+
+function renderReportContent(bmi, bmiClass, bmiColor, hydration, waterVal, sleepScore, sleepVal) {
+  const container = document.getElementById("content");
+  container.innerHTML = `
+    <div class="report-list">
+      <div class="box">
+        <div class="box-icon bmi">
+          <i data-lucide="calculator"></i>
+        </div>
+        <div class="box-content">
+          <div class="box-title">مؤشر كتلة الجسم (BMI)</div>
+          <div class="box-value-group">
+            <span class="box-value">${bmi}</span>
+            <span class="box-sub" style="color: ${bmiColor};">${bmiClass}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-icon hydration">
+          <i data-lucide="droplet"></i>
+        </div>
+        <div class="box-content">
+          <div class="box-title">ترطيب الجسم</div>
+          <div class="box-value-group">
+            <span class="box-value">${hydration}%</span>
+            <span class="box-sub" style="color: #38bdf8;">${waterVal} لتر من 3 لتر</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-icon sleep">
+          <i data-lucide="bed-double"></i>
+        </div>
+        <div class="box-content">
+          <div class="box-title">جودة النوم</div>
+          <div class="box-value-group">
+            <span class="box-value">${sleepScore}%</span>
+            <span class="box-sub" style="color: #f59e0b;">${sleepVal} ساعات من 8 ساعات</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  lucide.createIcons();
 }
 
 loadReport();
 </script>
 
-</head>
-<body>
-
-<div class="container">
-
-<h2>التقارير الصحية</h2>
-
-<div class="box">مؤشر كتلة الجسم (BMI): <span id="bmi">--</span></div>
-<div class="box">ترطيب الجسم: <span id="hydration">--%</span></div>
-<div class="box">جودة النوم: <span id="sleep">--%</span></div>
-
-<div class="nav">
-  <a href="home.html">الرئيسية</a>
-  <a href="analysis.html">التحليل</a>
-  <a href="tips.html">النصائح</a>
-</div>
-
-</div>
-
+<script>
+  lucide.createIcons();
+</script>
 </body>
 </html>

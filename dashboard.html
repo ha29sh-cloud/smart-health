@@ -2,73 +2,496 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>لوحة التحكم - صحتي الذكية</title>
 
-<!-- تصميم -->
-<style>
-body { font-family: "Cairo", sans-serif; background: #f4f8ff; margin: 0; padding: 20px; }
-.container { max-width: 480px; margin: auto; background: #fff; padding: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-h2 { text-align: center; color: #1f7ae0; }
-.circle { width: 150px; height: 150px; border-radius: 50%; background: #e8f2ff; border: 6px solid #4da3ff; display: flex; justify-content: center; align-items: center; font-size: 32px; margin: 20px auto; font-weight: bold; color: #1f7ae0; }
-.box { background: #f4f8ff; padding: 14px; border-radius: 12px; margin-bottom: 12px; border-right: 5px solid #4da3ff; }
-.btn { display: block; width: 100%; padding: 14px; background: #4da3ff; color: #fff; border-radius: 10px; text-align: center; text-decoration: none; margin-top: 20px; font-size: 17px; font-weight: bold; }
-.nav { text-align: center; margin-top: 20px; }
-.nav a { display: inline-block; margin: 6px; padding: 10px 16px; background: #4da3ff; color: #fff; border-radius: 8px; text-decoration: none; }
-canvas { margin-top: 20px; }
-</style>
+<!-- Cairo Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
-<!-- Charts.js -->
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Firebase -->
+<style>
+:root {
+  --primary: #4f46e5;
+  --primary-glow: rgba(79, 70, 229, 0.4);
+  --bg: #0f172a;
+  --card-bg: rgba(30, 41, 59, 0.7);
+  --border: rgba(255, 255, 255, 0.08);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-emerald: #10b981;
+  --accent-rose: #f43f5e;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Cairo", sans-serif;
+  background: radial-gradient(circle at top right, #1e1b4b 0%, var(--bg) 100%);
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding: 20px 20px 80px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+}
+
+body::before, body::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: 0;
+}
+body::before {
+  width: 250px;
+  height: 250px;
+  background: rgba(79, 70, 229, 0.25);
+  top: 10%;
+  right: 10%;
+}
+body::after {
+  width: 200px;
+  height: 200px;
+  background: rgba(16, 185, 129, 0.15);
+  bottom: 10%;
+  left: 10%;
+}
+
+.container {
+  max-width: 480px;
+  width: 100%;
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  padding: 25px;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.header-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(244, 63, 94, 0.1);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  color: var(--accent-rose);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.logout-btn:hover {
+  background: var(--accent-rose);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.health-gauge-container {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  margin: 10px auto 25px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.health-gauge-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.health-gauge-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.05);
+  stroke-width: 8;
+}
+
+.health-gauge-fill {
+  fill: none;
+  stroke: url(#healthGrad);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 440;
+  stroke-dashoffset: 440;
+  transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.health-score-text {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.health-percent {
+  font-size: 32px;
+  color: #fff;
+  font-weight: 900;
+  line-height: 1.1;
+  text-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
+}
+
+.health-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.box {
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid var(--border);
+  padding: 16px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.3s;
+}
+
+.box:hover {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(255,255,255,0.15);
+}
+
+.box-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box-icon.points {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.box-icon.status {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--accent-emerald);
+}
+
+.box-content {
+  flex: 1;
+}
+
+.box-title {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.box-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.chart-card {
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid var(--border);
+  padding: 18px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+}
+
+.chart-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chart-title i {
+  color: var(--primary);
+  width: 18px;
+  height: 18px;
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+  color: #fff;
+  border-radius: 14px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 700;
+  transition: all 0.3s;
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(79, 70, 229, 0.5);
+  background: linear-gradient(135deg, #5a52e6 0%, #4c8ff7 100%);
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-around;
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: bold;
+  gap: 4px;
+  transition: color 0.3s;
+  width: 60px;
+}
+
+.nav-item i {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s;
+}
+
+.nav-item:hover {
+  color: #fff;
+}
+
+.nav-item.active {
+  color: #4da3ff;
+  text-shadow: 0 0 10px rgba(77, 163, 255, 0.3);
+}
+
+.nav-item.active i {
+  transform: translateY(-2px);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header-area">
+    <h2>لوحة التحكم</h2>
+    <button class="logout-btn" onclick="logout()" title="تسجيل الخروج">
+      <i data-lucide="log-out"></i>
+    </button>
+  </div>
+
+  <div class="health-gauge-container">
+    <svg class="health-gauge-svg" viewBox="0 0 160 160">
+      <defs>
+        <linearGradient id="healthGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#4f46e5" />
+          <stop offset="100%" stop-color="#10b981" />
+        </linearGradient>
+      </defs>
+      <circle class="health-gauge-bg" cx="80" cy="80" r="70" />
+      <circle class="health-gauge-fill" id="gaugeFill" cx="80" cy="80" r="70" />
+    </svg>
+    <div class="health-score-text">
+      <span class="health-percent" id="health">--%</span>
+      <span class="health-label">نقاط الصحة</span>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="box">
+      <div class="box-icon points">
+        <i data-lucide="award"></i>
+      </div>
+      <div class="box-content">
+        <div class="box-title">نقاط اليوم</div>
+        <div class="box-value"><span id="points">0</span> / 70</div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="box-icon status" id="statusIcon">
+        <i data-lucide="help-circle"></i>
+      </div>
+      <div class="box-content">
+        <div class="box-title">حالة اليوم</div>
+        <div class="box-value" id="status">جاري فحص البيانات...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">
+      <i data-lucide="bar-chart-2"></i>
+      <span>ساعات النوم الأسبوعية</span>
+    </div>
+    <canvas id="chart" height="180"></canvas>
+  </div>
+
+  <a href="input.html" class="btn-primary">
+    <i data-lucide="plus-circle" style="width: 20px; height: 20px; margin-left: 6px;"></i>
+    إدخال بيانات اليوم
+  </a>
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a href="dashboard.html" class="nav-item active">
+    <i data-lucide="layout-dashboard"></i>
+    الرئيسية
+  </a>
+  <a href="analysis.html" class="nav-item">
+    <i data-lucide="brain-circuit"></i>
+    التحليل
+  </a>
+  <a href="reports.html" class="nav-item">
+    <i data-lucide="clipboard-list"></i>
+    التقارير
+  </a>
+  <a href="tips.html" class="nav-item">
+    <i data-lucide="sparkles"></i>
+    النصائح
+  </a>
+</div>
+
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { db } from "./firebase-config.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAoC51qunH31opTG50e92KNFl_fRsFIqqM",
-  authDomain: "smarthealth-85876.firebaseapp.com",
-  projectId: "smarthealth-85876",
-  storageBucket: "smarthealth-85876.firebasestorage.app",
-  messagingSenderId: "706581803098",
-  appId: "1:706581803098:web:12adcccf9074c95092a863",
-  measurementId: "G-RF69MDJWJ6"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const uid = localStorage.getItem("uid");
+if (!uid) {
+  window.location.href = "index.html";
+}
 
 async function loadDashboard() {
-  const uid = localStorage.getItem("uid");
   const today = new Date().toISOString().split("T")[0];
 
-  const snap = await getDoc(doc(db, "users", uid, "days", today));
+  try {
+    const snap = await getDoc(doc(db, "users", uid, "days", today));
 
-  if (!snap.exists()) {
-    document.getElementById("status").innerText = "لم يتم إدخال بيانات اليوم";
-    return;
+    if (!snap.exists()) {
+      document.getElementById("status").innerText = "لم يتم إدخال بيانات اليوم";
+      document.getElementById("status").style.color = "#f43f5e";
+      document.getElementById("statusIcon").innerHTML = '<i data-lucide="alert-circle" style="color: #f43f5e;"></i>';
+      document.getElementById("statusIcon").style.background = "rgba(244, 63, 94, 0.1)";
+      
+      document.getElementById("points").innerText = "0";
+      document.getElementById("health").innerText = "0%";
+      setGaugePercent(0);
+      lucide.createIcons();
+      loadWeeklyChart(uid);
+      return;
+    }
+
+    const d = snap.data();
+    document.getElementById("status").innerText = "تم حفظ بيانات اليوم";
+    document.getElementById("status").style.color = "#10b981";
+    document.getElementById("statusIcon").innerHTML = '<i data-lucide="check-circle-2" style="color: #10b981;"></i>';
+    document.getElementById("statusIcon").style.background = "rgba(16, 185, 129, 0.1)";
+
+    // Calculate points
+    let points = 0;
+    if (d.water >= 2) points += 10;
+    if (d.sleep >= 7) points += 10;
+    if (d.sitting <= 5) points += 10;
+    if (d.smoker === "no") points += 20;
+
+    const bmi = d.weight / (d.height/100)**2;
+    if (bmi >= 18.5 && bmi <= 24.9) points += 20;
+
+    document.getElementById("points").innerText = points;
+
+    const healthPercent = Math.round((points / 70) * 100);
+    document.getElementById("health").innerText = healthPercent + "%";
+    setGaugePercent(healthPercent);
+
+    lucide.createIcons();
+    loadWeeklyChart(uid);
+  } catch (err) {
+    console.error("Error loading dashboard:", err);
+    document.getElementById("status").innerText = "فشل الاتصال بقاعدة البيانات. يرجى تفعيل Firestore.";
+    document.getElementById("status").style.color = "#f43f5e";
+    document.getElementById("statusIcon").innerHTML = '<i data-lucide="alert-circle" style="color: #f43f5e;"></i>';
+    document.getElementById("statusIcon").style.background = "rgba(244, 63, 94, 0.1)";
+    document.getElementById("points").innerText = "0";
+    document.getElementById("health").innerText = "0%";
+    setGaugePercent(0);
+    lucide.createIcons();
+    loadWeeklyChart(uid);
   }
+}
 
-  const d = snap.data();
-
-  // حساب النقاط
-  let points = 0;
-  if (d.water >= 2) points += 10;
-  if (d.sleep >= 7) points += 10;
-  if (d.sitting <= 5) points += 10;
-  if (d.smoker === "no") points += 20;
-
-  const bmi = d.weight / (d.height/100)**2;
-  if (bmi >= 18.5 && bmi <= 24.9) points += 20;
-
-  document.getElementById("points").innerText = points;
-
-  // الصحة العامة
-  const health = Math.min(100, points);
-  document.getElementById("health").innerText = health + "%";
-
-  // رسم بياني أسبوعي
-  loadWeeklyChart(uid);
+function setGaugePercent(percent) {
+  const circle = document.getElementById("gaugeFill");
+  const radius = 70;
+  const circumference = 2 * Math.PI * radius;
+  
+  circle.style.strokeDasharray = circumference;
+  const offset = circumference - (percent / 100) * circumference;
+  circle.style.strokeDashoffset = offset;
 }
 
 async function loadWeeklyChart(uid) {
@@ -79,51 +502,65 @@ async function loadWeeklyChart(uid) {
     const date = new Date(Date.now() - i * 86400000).toISOString().split("T")[0];
     labels.push(date.slice(5));
 
-    const snap = await getDoc(doc(db, "users", uid, "days", date));
-    values.push(snap.exists() ? snap.data().sleep : 0);
+    try {
+      const snap = await getDoc(doc(db, "users", uid, "days", date));
+      values.push(snap.exists() ? snap.data().sleep : 0);
+    } catch (err) {
+      values.push(0);
+    }
   }
 
-  new Chart(document.getElementById("chart"), {
+  const ctx = document.getElementById("chart").getContext("2d");
+  new Chart(ctx, {
     type: "line",
     data: {
       labels,
       datasets: [{
         label: "ساعات النوم",
         data: values,
-        borderColor: "#1f7ae0",
-        backgroundColor: "#4da3ff55",
-        tension: 0.4
+        borderColor: "#6366f1",
+        backgroundColor: "rgba(99, 102, 241, 0.15)",
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: "#6366f1",
+        pointBorderColor: "#fff",
+        pointHoverRadius: 6
       }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: "rgba(255, 255, 255, 0.05)" },
+          ticks: { color: "#94a3b8", font: { family: "Cairo", size: 10 } }
+        },
+        y: {
+          grid: { color: "rgba(255, 255, 255, 0.05)" },
+          ticks: { color: "#94a3b8", font: { family: "Cairo", size: 10 } },
+          suggestedMax: 10,
+          suggestedMin: 0
+        }
+      }
     }
   });
 }
 
+window.logout = function() {
+  localStorage.removeItem("uid");
+  window.location.href = "index.html";
+};
+
 loadDashboard();
 </script>
 
-</head>
-<body>
-
-<div class="container">
-
-<h2>لوحة التحكم</h2>
-
-<div class="circle" id="health">--%</div>
-
-<div class="box">نقاط اليوم: <span id="points">--</span></div>
-<div class="box">حالة اليوم: <span id="status">--</span></div>
-
-<canvas id="chart" height="150"></canvas>
-
-<a href="input.html" class="btn">إدخال بيانات اليوم</a>
-
-<div class="nav">
-  <a href="analysis.html">التحليل</a>
-  <a href="reports.html">التقارير</a>
-  <a href="tips.html">النصائح</a>
-</div>
-
-</div>
-
+<script>
+  lucide.createIcons();
+</script>
 </body>
 </html>

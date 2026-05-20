@@ -2,99 +2,524 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>إدخال البيانات - صحتي الذكية</title>
 
-<style>
-body { font-family: "Cairo", sans-serif; background: #f4f8ff; margin: 0; padding: 20px; }
-.container { max-width: 480px; margin: auto; background: #fff; padding: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-h2 { text-align: center; color: #1f7ae0; }
-label { display: block; margin-top: 12px; font-weight: bold; }
-input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #ccc; margin-top: 6px; font-size: 16px; }
-.radio-group { margin-top: 10px; display: flex; gap: 20px; }
-.radio-option { display: flex; align-items: center; gap: 6px; color: #1f7ae0; }
-.radio-option input { width: 20px; height: 20px; accent-color: #4da3ff; }
-.btn { display: block; width: 100%; padding: 14px; background: #4da3ff; color: #fff; border-radius: 10px; text-align: center; text-decoration: none; margin-top: 20px; font-size: 17px; font-weight: bold; border: none; cursor: pointer; }
-</style>
+<!-- Cairo Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+:root {
+  --primary: #4f46e5;
+  --primary-glow: rgba(79, 70, 229, 0.4);
+  --bg: #0f172a;
+  --card-bg: rgba(30, 41, 59, 0.7);
+  --border: rgba(255, 255, 255, 0.08);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --input-bg: rgba(15, 23, 42, 0.6);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Cairo", sans-serif;
+  background: radial-gradient(circle at top right, #1e1b4b 0%, var(--bg) 100%);
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+body::before, body::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: 0;
+}
+body::before {
+  width: 250px;
+  height: 250px;
+  background: rgba(79, 70, 229, 0.25);
+  top: 10%;
+  right: 10%;
+}
+body::after {
+  width: 200px;
+  height: 200px;
+  background: rgba(16, 185, 129, 0.15);
+  bottom: 10%;
+  left: 10%;
+}
+
+.container {
+  max-width: 480px;
+  width: 100%;
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  padding: 30px;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.header-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(3px);
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.label-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.label-wrapper i {
+  color: #4da3ff;
+  width: 18px;
+  height: 18px;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+input[type="number"] {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 16px;
+  font-family: "Cairo", sans-serif;
+  transition: all 0.3s;
+  outline: none;
+}
+
+input[type="number"]:focus {
+  border-color: #4da3ff;
+  box-shadow: 0 0 10px rgba(77, 163, 255, 0.25);
+  background: rgba(15, 23, 42, 0.8);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.radio-group {
+  display: flex;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.radio-option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.radio-option input {
+  display: none;
+}
+
+.radio-option:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.radio-option.selected {
+  border-color: #4da3ff;
+  background: rgba(77, 163, 255, 0.1);
+  color: #4da3ff;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+  color: #fff;
+  border-radius: 14px;
+  text-align: center;
+  text-decoration: none;
+  margin-top: 25px;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(79, 70, 229, 0.5);
+  background: linear-gradient(135deg, #5a52e6 0%, #4c8ff7 100%);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Toast Notification Style */
+.toast-container {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  min-width: 280px;
+  max-width: 400px;
+  background: rgba(30, 41, 59, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 14px 20px;
+  border-radius: 16px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast.success {
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15);
+}
+
+.toast.error {
+  border-color: rgba(244, 63, 94, 0.4);
+  box-shadow: 0 10px 30px rgba(244, 63, 94, 0.15);
+}
+
+.toast.warning {
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 10px 30px rgba(245, 158, 11, 0.15);
+}
+
+.toast svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.toast.success svg { color: #10b981; }
+.toast.error svg { color: #f43f5e; }
+.toast.warning svg { color: #f59e0b; }
+</style>
 </head>
 <body>
 
 <div class="container">
+  <div class="header-area">
+    <h2>إدخال بيانات اليوم</h2>
+    <button class="back-btn" onclick="window.location.href='dashboard.html'">
+      <i data-lucide="arrow-left"></i>
+    </button>
+  </div>
 
-<h2>إدخال بيانات اليوم</h2>
+  <div class="form-group">
+    <div class="label-wrapper">
+      <i data-lucide="user"></i>
+      <label for="age">العمر (سنوات)</label>
+    </div>
+    <input id="age" type="number" placeholder="مثال: 25">
+  </div>
 
-<label>العمر</label>
-<input id="age" type="number">
+  <div class="form-group">
+    <div class="label-wrapper">
+      <i data-lucide="scale"></i>
+      <label for="weight">الوزن (كجم)</label>
+    </div>
+    <input id="weight" type="number" placeholder="مثال: 70">
+  </div>
 
-<label>الوزن (كجم)</label>
-<input id="weight" type="number">
+  <div class="form-group">
+    <div class="label-wrapper">
+      <i data-lucide="ruler"></i>
+      <label for="height">الطول (سم)</label>
+    </div>
+    <input id="height" type="number" placeholder="مثال: 175">
+  </div>
 
-<label>الطول (سم)</label>
-<input id="height" type="number">
+  <div class="form-group">
+    <div class="label-wrapper">
+      <i data-lucide="bed-double"></i>
+      <label for="sleep">ساعات النوم</label>
+    </div>
+    <input id="sleep" type="number" placeholder="مثال: 8">
+  </div>
 
-<label>عدد ساعات النوم</label>
-<input id="sleep" type="number">
+  <div class="form-group">
+    <div class="label-wrapper">
+      <i data-lucide="droplet"></i>
+      <label for="water">لترات الماء</label>
+    </div>
+    <input id="water" type="number" step="0.1" placeholder="مثال: 2.5">
+  </div>
 
-<label>لترات الماء</label>
-<input id="water" type="number">
+  <div class="form-group">
+    <div class="label-wrapper">
+      <i data-lucide="sofa"></i>
+      <label for="sitting">ساعات الجلوس الطويل</label>
+    </div>
+    <input id="sitting" type="number" placeholder="مثال: 4">
+  </div>
 
-<label>ساعات الجلوس الطويل</label>
-<input id="sitting" type="number">
+  <div class="form-group">
+    <div class="label-wrapper">
+      <i data-lucide="info"></i>
+      <label>هل أنت مدخن؟</label>
+    </div>
+    <div class="radio-group">
+      <label class="radio-option" id="smokeYes">
+        <input type="radio" name="smoker" value="yes" onchange="updateRadioSelection()"> نعم
+      </label>
+      <label class="radio-option" id="smokeNo">
+        <input type="radio" name="smoker" value="no" onchange="updateRadioSelection()"> لا
+      </label>
+    </div>
+  </div>
 
-<label>هل أنت مدخن؟</label>
-<div class="radio-group">
-  <label class="radio-option"><input type="radio" name="smoker" value="yes"> نعم</label>
-  <label class="radio-option"><input type="radio" name="smoker" value="no"> لا</label>
+  <button type="button" id="saveBtn" class="btn" onclick="saveData()">حفظ البيانات</button>
 </div>
 
-<button type="button" class="btn" onclick="saveData()">حفظ البيانات</button>
+<script type="module">
+import { db } from "./firebase-config.js";
+import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-</div>
+window.showToast = function (message, type = "success") {
+  let container = document.getElementById("toastContainer");
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "toastContainer";
+    container.className = "toast-container";
+    document.body.appendChild(container);
+  }
 
-<!-- Firebase v8 CDN -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  
+  let icon = "info";
+  if (type === "success") icon = "check-circle";
+  else if (type === "error") icon = "alert-circle";
+  else if (type === "warning") icon = "alert-triangle";
 
-<script>
-var firebaseConfig = {
-  apiKey: "AIzaSyAoC51qunH31opTG50e92KNFl_fRsFIqqM",
-  authDomain: "smarthealth-85876.firebaseapp.com",
-  projectId: "smarthealth-85876",
-  storageBucket: "smarthealth-85876.firebasestorage.app",
-  messagingSenderId: "706581803098",
-  appId: "1:706581803098:web:12adcccf9074c95092a863",
-  measurementId: "G-RF69MDJWJ6"
+  toast.innerHTML = `
+    <i data-lucide="${icon}"></i>
+    <span>${message}</span>
+  `;
+  
+  container.appendChild(toast);
+  
+  if (window.lucide) {
+    lucide.createIcons();
+  }
+
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 10);
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => {
+      toast.remove();
+      if (container.children.length === 0) {
+        container.remove();
+      }
+    }, 400);
+  }, 3500);
 };
 
-firebase.initializeApp(firebaseConfig);
-var db = firebase.firestore();
+const uid = localStorage.getItem("uid");
+if (!uid) {
+  window.showToast("الرجاء تسجيل الدخول أولاً", "warning");
+  setTimeout(() => {
+    window.location.href = "index.html";
+  }, 1500);
+}
 
-function saveData() {
-  const uid = localStorage.getItem("uid");
-  if (!uid) {
-    alert("الرجاء تسجيل الدخول أولاً");
-    window.location.href = "login.html";
+async function loadTodayData() {
+  const today = new Date().toISOString().split("T")[0];
+  try {
+    const docRef = doc(db, "users", uid, "days", today);
+    const snap = await getDoc(docRef);
+    if (snap.exists()) {
+      const d = snap.data();
+      document.getElementById("age").value = d.age || "";
+      document.getElementById("weight").value = d.weight || "";
+      document.getElementById("height").value = d.height || "";
+      document.getElementById("sleep").value = d.sleep || "";
+      document.getElementById("water").value = d.water || "";
+      document.getElementById("sitting").value = d.sitting || "";
+      if (d.smoker) {
+        const radio = document.querySelector(`input[name="smoker"][value="${d.smoker}"]`);
+        if (radio) {
+          radio.checked = true;
+          updateRadioSelection();
+        }
+      }
+    }
+  } catch (err) {
+    console.error("Error loading daily data:", err);
+  }
+}
+
+window.saveData = async function () {
+  const age = document.getElementById("age").value.trim();
+  const weight = document.getElementById("weight").value.trim();
+  const height = document.getElementById("height").value.trim();
+  const sleep = document.getElementById("sleep").value.trim();
+  const water = document.getElementById("water").value.trim();
+  const sitting = document.getElementById("sitting").value.trim();
+  const smokerEl = document.querySelector("input[name='smoker']:checked");
+  const smoker = smokerEl ? smokerEl.value : "";
+
+  if (!age || !weight || !height || !sleep || !water || !sitting || !smoker) {
+    window.showToast("يرجى ملء جميع الحقول واختيار حالة التدخين", "warning");
     return;
   }
 
+  const saveBtn = document.getElementById("saveBtn");
+  saveBtn.style.opacity = "0.7";
+  saveBtn.style.pointerEvents = "none";
+  saveBtn.innerText = "جاري الحفظ...";
+
   const today = new Date().toISOString().split("T")[0];
 
-  db.collection("users").doc(uid).collection("days").doc(today).set({
-    age: document.getElementById("age").value,
-    weight: document.getElementById("weight").value,
-    height: document.getElementById("height").value,
-    sleep: document.getElementById("sleep").value,
-    water: document.getElementById("water").value,
-    sitting: document.getElementById("sitting").value,
-    smoker: document.querySelector("input[name='smoker']:checked")?.value || "",
-    timestamp: Date.now()
-  }).then(() => {
-    alert("تم حفظ البيانات بنجاح");
-    window.location.href = "dashboard.html";
-  });
-}
+  try {
+    await setDoc(doc(db, "users", uid, "days", today), {
+      age: Number(age),
+      weight: Number(weight),
+      height: Number(height),
+      sleep: Number(sleep),
+      water: Number(water),
+      sitting: Number(sitting),
+      smoker: smoker,
+      timestamp: Date.now()
+    });
+    window.showToast("تم حفظ البيانات بنجاح", "success");
+    setTimeout(() => {
+      window.location.href = "dashboard.html";
+    }, 1500);
+  } catch (err) {
+    window.showToast("حدث خطأ أثناء الحفظ: " + err.message, "error");
+    saveBtn.style.opacity = "1";
+    saveBtn.style.pointerEvents = "all";
+    saveBtn.innerText = "حفظ البيانات";
+  }
+};
+
+window.updateRadioSelection = function() {
+  const smokeYes = document.getElementById("smokeYes");
+  const smokeNo = document.getElementById("smokeNo");
+  const yesInput = smokeYes.querySelector("input");
+  const noInput = smokeNo.querySelector("input");
+
+  if (yesInput.checked) {
+    smokeYes.classList.add("selected");
+    smokeNo.classList.remove("selected");
+  } else if (noInput.checked) {
+    smokeNo.classList.add("selected");
+    smokeYes.classList.remove("selected");
+  }
+};
+
+// Initial load
+loadTodayData();
 </script>
 
-
+<script>
+  lucide.createIcons();
+</script>
 </body>
 </html>

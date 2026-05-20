@@ -2,29 +2,77 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>SmartHealth</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جاري التحويل - صحتي الذكية</title>
+
+<!-- Cairo Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #0f172a;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --primary: #4f46e5;
+}
+
+body {
+  font-family: "Cairo", sans-serif;
+  background: radial-gradient(circle at top right, #1e1b4b 0%, var(--bg) 100%);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  overflow: hidden;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-left-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+  box-shadow: 0 0 15px rgba(79, 70, 229, 0.4);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+p {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+</style>
 
 <script>
-  // عند فتح الصفحة، يتم تحويل المستخدم مباشرة إلى لوحة التحكم
   window.onload = function () {
-    // لو ما فيه UID يرجع لصفحة تسجيل الدخول
     if (!localStorage.getItem("uid")) {
-      window.location.href = "login.html";
+      window.location.href = "index.html";
       return;
     }
-
-    // لو فيه UID يروح للداشبورد
     window.location.href = "dashboard.html";
   };
 </script>
-
 </head>
 <body>
 
-<!-- صفحة تحويل فقط -->
-<p style="text-align:center; margin-top:40px; font-family:Cairo;">
-  جاري التحويل إلى لوحة التحكم...
-</p>
+<div class="spinner"></div>
+<p>جاري التحميل...</p>
 
 </body>
 </html>
