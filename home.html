@@ -12,15 +12,24 @@
 
 <style>
 :root {
+  --primary: #0284c7;
+  --bg: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --bg-gradient: radial-gradient(circle at top right, #e0f2fe 0%, #f1f5f9 100%);
+}
+
+body.dark-theme {
+  --primary: #4f46e5;
   --bg: #0f172a;
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
-  --primary: #4f46e5;
+  --bg-gradient: radial-gradient(circle at top right, #1e1b4b 0%, #0f172a 100%);
 }
 
 body {
   font-family: "Cairo", sans-serif;
-  background: radial-gradient(circle at top right, #1e1b4b 0%, var(--bg) 100%);
+  background: var(--bg-gradient);
   color: var(--text-primary);
   min-height: 100vh;
   display: flex;
@@ -70,6 +79,14 @@ p {
 </script>
 </head>
 <body>
+<script>
+  (function() {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    if (savedTheme === "dark") {
+      document.body.classList.add("dark-theme");
+    }
+  })();
+</script>
 
 <div class="spinner"></div>
 <p>جاري التحميل...</p>

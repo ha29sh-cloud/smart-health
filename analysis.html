@@ -15,14 +15,43 @@
 
 <style>
 :root {
-  --primary: #4f46e5;
-  --bg: #0f172a;
-  --card-bg: rgba(30, 41, 59, 0.7);
-  --border: rgba(255, 255, 255, 0.08);
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
+  --primary: #0284c7; /* light medical blue */
+  --primary-glow: rgba(2, 132, 199, 0.2);
+  --bg: #f0f9ff;
+  --card-bg: #ffffff;
+  --border: rgba(14, 165, 233, 0.15);
+  --box-bg: #f8fafc;
+  --box-hover-bg: #f0f9ff;
+  --text-primary: #0f172a;
+  --text-secondary: #0284c7;
+  --text-muted: #64748b;
   --accent-emerald: #10b981;
   --accent-rose: #f43f5e;
+  --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+  --orb-1: rgba(14, 165, 233, 0.15);
+  --orb-2: rgba(34, 197, 94, 0.1);
+  --gauge-track: rgba(14, 165, 233, 0.22);
+  --shadow: 0 10px 30px rgba(2, 132, 199, 0.08);
+}
+
+body.dark-theme {
+  --primary: #4f46e5;
+  --primary-glow: rgba(79, 70, 229, 0.4);
+  --bg: #0f172a;
+  --card-bg: rgba(30, 41, 59, 0.75);
+  --border: rgba(255, 255, 255, 0.08);
+  --box-bg: rgba(15, 23, 42, 0.4);
+  --box-hover-bg: rgba(15, 23, 42, 0.6);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent-emerald: #10b981;
+  --accent-rose: #f43f5e;
+  --bg-gradient: radial-gradient(circle at top right, #1e1b4b 0%, #0f172a 100%);
+  --orb-1: rgba(79, 70, 229, 0.35);
+  --orb-2: rgba(16, 185, 129, 0.2);
+  --gauge-track: rgba(255, 255, 255, 0.1);
+  --shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 * {
@@ -33,7 +62,7 @@
 
 body {
   font-family: "Cairo", sans-serif;
-  background: radial-gradient(circle at top right, #1e1b4b 0%, var(--bg) 100%);
+  background: var(--bg-gradient);
   color: var(--text-primary);
   min-height: 100vh;
   padding: 20px 20px 80px 20px;
@@ -53,14 +82,14 @@ body::before, body::after {
 body::before {
   width: 250px;
   height: 250px;
-  background: rgba(79, 70, 229, 0.25);
+  background: var(--orb-1);
   top: 10%;
   right: 10%;
 }
 body::after {
   width: 200px;
   height: 200px;
-  background: rgba(16, 185, 129, 0.15);
+  background: var(--orb-2);
   bottom: 10%;
   left: 10%;
 }
@@ -74,7 +103,7 @@ body::after {
   border: 1px solid var(--border);
   padding: 25px;
   border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow);
   z-index: 10;
   animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
@@ -84,11 +113,35 @@ body::after {
   to { opacity: 1; transform: translateY(0); }
 }
 
+.header-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
 h2 {
   font-size: 22px;
   font-weight: 800;
-  color: #fff;
-  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+.theme-toggle-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+.theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
 }
 
 .health-gauge-container {
@@ -109,14 +162,14 @@ h2 {
 
 .health-gauge-bg {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.05);
-  stroke-width: 8;
+  stroke: var(--gauge-track);
+  stroke-width: 14;
 }
 
 .health-gauge-fill {
   fill: none;
   stroke: url(#totalGrad);
-  stroke-width: 8;
+  stroke-width: 14;
   stroke-linecap: round;
   stroke-dasharray: 440;
   stroke-dashoffset: 440;
@@ -134,15 +187,14 @@ h2 {
 
 .health-percent {
   font-size: 32px;
-  color: #fff;
+  color: var(--text-primary);
   font-weight: 900;
   line-height: 1.1;
-  text-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
 }
 
 .health-label {
   font-size: 11px;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   text-transform: uppercase;
   margin-top: 4px;
 }
@@ -155,7 +207,7 @@ h2 {
 }
 
 .box {
-  background: rgba(15, 23, 42, 0.4);
+  background: var(--box-bg);
   border: 1px solid var(--border);
   padding: 16px;
   border-radius: 16px;
@@ -177,7 +229,7 @@ h2 {
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .box-title i {
@@ -193,12 +245,13 @@ h2 {
 .box-value {
   font-size: 14px;
   color: var(--text-secondary);
+  font-weight: 600;
 }
 
 .progress-bar-container {
   width: 100%;
   height: 8px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--gauge-track);
   border-radius: 4px;
   overflow: hidden;
   margin-top: 6px;
@@ -266,7 +319,7 @@ h2 {
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(15, 23, 42, 0.85);
+  background: var(--card-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid var(--border);
@@ -274,13 +327,14 @@ h2 {
   display: flex;
   justify-content: space-around;
   z-index: 100;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   text-decoration: none;
   font-size: 11px;
   font-weight: bold;
@@ -296,12 +350,12 @@ h2 {
 }
 
 .nav-item:hover {
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .nav-item.active {
-  color: #4da3ff;
-  text-shadow: 0 0 10px rgba(77, 163, 255, 0.3);
+  color: var(--primary);
+  text-shadow: 0 0 10px var(--primary-glow);
 }
 
 .nav-item.active i {
@@ -310,9 +364,23 @@ h2 {
 </style>
 </head>
 <body>
+<script>
+  (function() {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    if (savedTheme === "dark") {
+      document.body.classList.add("dark-theme");
+    }
+  })();
+</script>
 
 <div class="container">
-  <h2>التحليل الذكي</h2>
+  <div class="header-area">
+    <button id="themeToggleBtn" class="theme-toggle-btn" onclick="window.toggleTheme()">
+      <i data-lucide="moon"></i>
+    </button>
+    <h2>التحليل الذكي</h2>
+    <div style="width: 40px;"></div> <!-- placeholder to center title -->
+  </div>
 
   <!-- Content to be loaded dynamically -->
   <div id="content">
@@ -351,6 +419,23 @@ if (!uid) {
   window.location.href = "index.html";
 }
 
+window.toggleTheme = function() {
+  const isDark = document.body.classList.toggle("dark-theme");
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+  window.updateThemeIcon();
+};
+
+window.updateThemeIcon = function() {
+  const btn = document.getElementById("themeToggleBtn");
+  if (btn) {
+    const isDark = document.body.classList.contains("dark-theme");
+    btn.innerHTML = `<i data-lucide="${isDark ? 'sun' : 'moon'}"></i>`;
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  }
+};
+
 async function loadAnalysis() {
   const today = new Date().toISOString().split("T")[0];
 
@@ -364,11 +449,38 @@ async function loadAnalysis() {
 
     const d = snap.data();
 
-    // Calculations
-    const fatigue = Math.min(100, Math.max(0, 100 - d.sleep * 12));
-    const obesity = Math.min(100, Math.max(0, (d.weight / (d.height/100)**2) * 4));
-    const diabetes = d.smoker === "yes" ? 60 : 20;
-    const pressure = Math.min(100, Math.max(0, d.sitting * 10));
+    // Smart risk calculations
+    // 1. Fatigue (sleep and mood)
+    let fatigue = 100 - d.sleep * 12;
+    if (d.mood === "sad") fatigue += 20;
+    else if (d.mood === "happy") fatigue -= 10;
+    fatigue = Math.min(100, Math.max(0, fatigue));
+
+    // 2. Obesity (weight, height, activity, food)
+    const bmi = d.weight / (d.height/100)**2;
+    let obesity = bmi * 3;
+    if (d.activity === "low") obesity += 15;
+    else if (d.activity === "high") obesity -= 15;
+    
+    const foodRating = d.food !== undefined ? Number(d.food) : 5;
+    if (foodRating <= 4) obesity += (5 - foodRating) * 6;
+    else if (foodRating >= 8) obesity -= 10;
+    obesity = Math.min(100, Math.max(0, obesity));
+
+    // 3. Diabetes (smoker, food, activity)
+    let diabetes = d.smoker === "yes" ? 30 : 10;
+    if (foodRating <= 5) diabetes += (6 - foodRating) * 8;
+    if (d.activity === "high") diabetes -= 10;
+    else if (d.activity === "low") diabetes += 10;
+    diabetes = Math.min(100, Math.max(0, diabetes));
+
+    // 4. Hypertension/Pressure (sitting, smoker, activity, mood)
+    let pressure = d.sitting * 8;
+    if (d.smoker === "yes") pressure += 15;
+    if (d.activity === "high") pressure -= 15;
+    else if (d.activity === "low") pressure += 15;
+    if (d.mood === "sad") pressure += 15;
+    pressure = Math.min(100, Math.max(0, pressure));
 
     const total = Math.max(0, Math.round(100 - ((fatigue + obesity + diabetes + pressure) / 4)));
 
@@ -377,10 +489,14 @@ async function loadAnalysis() {
     // Set gauge and progress animations
     setTimeout(() => {
       setGaugePercent(total);
-      document.getElementById("fatigueBar").style.width = fatigue.toFixed(0) + "%";
-      document.getElementById("obesityBar").style.width = obesity.toFixed(0) + "%";
-      document.getElementById("diabetesBar").style.width = diabetes.toFixed(0) + "%";
-      document.getElementById("pressureBar").style.width = pressure.toFixed(0) + "%";
+      const fBar = document.getElementById("fatigueBar");
+      const oBar = document.getElementById("obesityBar");
+      const dBar = document.getElementById("diabetesBar");
+      const pBar = document.getElementById("pressureBar");
+      if (fBar) fBar.style.width = fatigue.toFixed(0) + "%";
+      if (oBar) oBar.style.width = obesity.toFixed(0) + "%";
+      if (dBar) dBar.style.width = diabetes.toFixed(0) + "%";
+      if (pBar) pBar.style.width = pressure.toFixed(0) + "%";
     }, 100);
 
   } catch (err) {
@@ -432,8 +548,8 @@ function renderAnalysisContent(total, fatigue, obesity, diabetes, pressure) {
       <svg class="health-gauge-svg" viewBox="0 0 160 160">
         <defs>
           <linearGradient id="totalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#3b82f6" />
-            <stop offset="100%" stop-color="#10b981" />
+            <stop offset="0%" stop-color="var(--primary)" />
+            <stop offset="100%" stop-color="var(--accent-emerald)" />
           </linearGradient>
         </defs>
         <circle class="health-gauge-bg" cx="80" cy="80" r="70" />
@@ -503,6 +619,7 @@ function renderAnalysisContent(total, fatigue, obesity, diabetes, pressure) {
 }
 
 loadAnalysis();
+window.updateThemeIcon();
 </script>
 
 <script>

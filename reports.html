@@ -13,16 +13,48 @@
 <!-- Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest"></script>
 
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
 :root {
-  --primary: #4f46e5;
-  --bg: #0f172a;
-  --card-bg: rgba(30, 41, 59, 0.7);
-  --border: rgba(255, 255, 255, 0.08);
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
+  --primary: #0284c7; /* light medical blue */
+  --primary-glow: rgba(2, 132, 199, 0.2);
+  --bg: #f0f9ff;
+  --card-bg: #ffffff;
+  --border: rgba(14, 165, 233, 0.15);
+  --box-bg: #f8fafc;
+  --box-hover-bg: #f0f9ff;
+  --text-primary: #0f172a;
+  --text-secondary: #0284c7;
+  --text-muted: #64748b;
   --accent-emerald: #10b981;
   --accent-rose: #f43f5e;
+  --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+  --orb-1: rgba(14, 165, 233, 0.15);
+  --orb-2: rgba(34, 197, 94, 0.1);
+  --gauge-track: rgba(148, 163, 184, 0.15);
+  --shadow: 0 10px 30px rgba(2, 132, 199, 0.08);
+}
+
+body.dark-theme {
+  --primary: #4f46e5;
+  --primary-glow: rgba(79, 70, 229, 0.4);
+  --bg: #0f172a;
+  --card-bg: rgba(30, 41, 59, 0.75);
+  --border: rgba(255, 255, 255, 0.08);
+  --box-bg: rgba(15, 23, 42, 0.4);
+  --box-hover-bg: rgba(15, 23, 42, 0.6);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent-emerald: #10b981;
+  --accent-rose: #f43f5e;
+  --bg-gradient: radial-gradient(circle at top right, #1e1b4b 0%, #0f172a 100%);
+  --orb-1: rgba(79, 70, 229, 0.35);
+  --orb-2: rgba(16, 185, 129, 0.2);
+  --gauge-track: rgba(255, 255, 255, 0.05);
+  --shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 * {
@@ -33,7 +65,7 @@
 
 body {
   font-family: "Cairo", sans-serif;
-  background: radial-gradient(circle at top right, #1e1b4b 0%, var(--bg) 100%);
+  background: var(--bg-gradient);
   color: var(--text-primary);
   min-height: 100vh;
   padding: 20px 20px 80px 20px;
@@ -53,14 +85,14 @@ body::before, body::after {
 body::before {
   width: 250px;
   height: 250px;
-  background: rgba(79, 70, 229, 0.25);
+  background: var(--orb-1);
   top: 10%;
   right: 10%;
 }
 body::after {
   width: 200px;
   height: 200px;
-  background: rgba(16, 185, 129, 0.15);
+  background: var(--orb-2);
   bottom: 10%;
   left: 10%;
 }
@@ -74,7 +106,7 @@ body::after {
   border: 1px solid var(--border);
   padding: 25px;
   border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow);
   z-index: 10;
   animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
@@ -84,11 +116,35 @@ body::after {
   to { opacity: 1; transform: translateY(0); }
 }
 
+.header-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
 h2 {
   font-size: 22px;
   font-weight: 800;
-  color: #fff;
-  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+.theme-toggle-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+.theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
 }
 
 .report-list {
@@ -99,7 +155,7 @@ h2 {
 }
 
 .box {
-  background: rgba(15, 23, 42, 0.4);
+  background: var(--box-bg);
   border: 1px solid var(--border);
   padding: 18px;
   border-radius: 16px;
@@ -110,8 +166,8 @@ h2 {
 }
 
 .box:hover {
-  background: rgba(15, 23, 42, 0.6);
-  border-color: rgba(255,255,255,0.15);
+  background: var(--box-hover-bg);
+  border-color: var(--primary);
 }
 
 .box-icon {
@@ -133,7 +189,7 @@ h2 {
 
 .box-title {
   font-size: 13px;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-weight: 600;
   margin-bottom: 4px;
 }
@@ -147,7 +203,7 @@ h2 {
 .box-value {
   font-size: 20px;
   font-weight: 800;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .box-sub {
@@ -206,7 +262,7 @@ h2 {
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(15, 23, 42, 0.85);
+  background: var(--card-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid var(--border);
@@ -214,13 +270,14 @@ h2 {
   display: flex;
   justify-content: space-around;
   z-index: 100;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   text-decoration: none;
   font-size: 11px;
   font-weight: bold;
@@ -236,12 +293,12 @@ h2 {
 }
 
 .nav-item:hover {
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .nav-item.active {
-  color: #4da3ff;
-  text-shadow: 0 0 10px rgba(77, 163, 255, 0.3);
+  color: var(--primary);
+  text-shadow: 0 0 10px var(--primary-glow);
 }
 
 .nav-item.active i {
@@ -250,9 +307,23 @@ h2 {
 </style>
 </head>
 <body>
+<script>
+  (function() {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    if (savedTheme === "dark") {
+      document.body.classList.add("dark-theme");
+    }
+  })();
+</script>
 
 <div class="container">
-  <h2>التقارير الصحية</h2>
+  <div class="header-area">
+    <button id="themeToggleBtn" class="theme-toggle-btn" onclick="window.toggleTheme()">
+      <i data-lucide="moon"></i>
+    </button>
+    <h2>التقارير الصحية</h2>
+    <div style="width: 40px;"></div> <!-- placeholder to center title -->
+  </div>
 
   <!-- Content to be loaded dynamically -->
   <div id="content">
@@ -284,27 +355,95 @@ h2 {
 
 <script type="module">
 import { db } from "./firebase-config.js";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const uid = localStorage.getItem("uid");
 if (!uid) {
   window.location.href = "index.html";
 }
 
+window.toggleTheme = function() {
+  const isDark = document.body.classList.toggle("dark-theme");
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+  window.updateThemeIcon();
+};
+
+window.updateThemeIcon = function() {
+  const btn = document.getElementById("themeToggleBtn");
+  if (btn) {
+    const isDark = document.body.classList.contains("dark-theme");
+    btn.innerHTML = `<i data-lucide="${isDark ? 'sun' : 'moon'}"></i>`;
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  }
+};
+
+function calculateScore(d) {
+  if (!d) return 0;
+  let points = 0;
+  
+  // 1. Sleep (max 15)
+  if (d.sleep >= 7) points += 15;
+  else if (d.sleep >= 6) points += 11;
+  else if (d.sleep >= 5) points += 7;
+  else points += 3;
+
+  // 2. Water (max 15)
+  if (d.water >= 3) points += 15;
+  else if (d.water >= 2) points += 11;
+  else if (d.water >= 1.5) points += 7;
+  else points += 3;
+
+  // 3. Sitting (max 10)
+  if (d.sitting <= 4) points += 10;
+  else if (d.sitting <= 6) points += 7;
+  else points += 3;
+
+  // 4. Smoker (max 10)
+  if (d.smoker === "no") points += 10;
+  else points += 2;
+
+  // 5. Daily Activity (max 15)
+  if (d.activity === "high") points += 15;
+  else if (d.activity === "medium") points += 11;
+  else points += 5;
+
+  // 6. Food Quality (max 20)
+  const foodRating = d.food !== undefined ? Number(d.food) : 5;
+  points += foodRating * 2;
+
+  // 7. Mental State (max 15)
+  if (d.mood === "happy") points += 15;
+  else if (d.mood === "neutral") points += 11;
+  else points += 5;
+
+  return points;
+}
+
 async function loadReport() {
-  const today = new Date().toISOString().split("T")[0];
-
   try {
-    const snap = await getDoc(doc(db, "users", uid, "days", today));
-
-    if (!snap.exists()) {
+    // Fetch all records
+    const daysRef = collection(db, "users", uid, "days");
+    const snap = await getDocs(daysRef);
+    
+    if (snap.empty) {
       renderEmptyState();
       return;
     }
 
-    const d = snap.data();
+    const records = [];
+    snap.forEach(doc => {
+      records.push({ date: doc.id, ...doc.data() });
+    });
 
-    // Calculations
+    // Sort descending by date YYYY-MM-DD
+    records.sort((a, b) => b.date.localeCompare(a.date));
+
+    // Get today's record (or latest)
+    const d = records[0];
+
+    // BMI, Hydration, Sleep scores
     const bmiVal = d.weight / (d.height/100)**2;
     const bmi = bmiVal.toFixed(1);
     const hydration = Math.round((d.water / 3) * 100);
@@ -315,19 +454,74 @@ async function loadReport() {
     let bmiColor = "";
     if (bmiVal < 18.5) {
       bmiClass = "نقص في الوزن (نحافة)";
-      bmiColor = "#38bdf8"; // Light Blue
+      bmiColor = "#38bdf8";
     } else if (bmiVal >= 18.5 && bmiVal <= 24.9) {
       bmiClass = "وزن مثالي (صحي)";
-      bmiColor = "#10b981"; // Emerald
+      bmiColor = "#10b981";
     } else if (bmiVal >= 25 && bmiVal <= 29.9) {
       bmiClass = "زيادة في الوزن";
-      bmiColor = "#f59e0b"; // Amber
+      bmiColor = "#f59e0b";
     } else {
       bmiClass = "سمنة مفرطة";
-      bmiColor = "#f43f5e"; // Rose
+      bmiColor = "#f43f5e";
     }
 
     renderReportContent(bmi, bmiClass, bmiColor, hydration, d.water, sleepScore, d.sleep);
+
+    // Calculate comparative metrics
+    // 1. Daily improvement (Today vs Yesterday)
+    const todayScore = calculateScore(records[0]);
+    const yesterdayScore = records.length > 1 ? calculateScore(records[1]) : null;
+    
+    const improvementTextEl = document.getElementById("improvementComparisonText");
+    const improvementIconEl = document.getElementById("improvementIcon");
+    if (yesterdayScore === null) {
+      improvementTextEl.innerText = "سجل بياناتك غداً للبدء في تتبع تحسنك اليومي!";
+      improvementTextEl.style.color = "var(--text-secondary)";
+    } else {
+      const diff = todayScore - yesterdayScore;
+      if (diff > 0) {
+        improvementTextEl.innerText = `تحسن بمقدار +${diff} نقاط مقارنة بيوم أمس 📈`;
+        improvementTextEl.style.color = "var(--accent-emerald)";
+        improvementIconEl.style.color = "var(--accent-emerald)";
+        improvementIconEl.style.background = "rgba(16, 185, 129, 0.1)";
+        improvementIconEl.innerHTML = `<i data-lucide="trending-up"></i>`;
+      } else if (diff < 0) {
+        improvementTextEl.innerText = `تراجع بمقدار ${diff} نقاط مقارنة بيوم أمس 📉`;
+        improvementTextEl.style.color = "var(--accent-rose)";
+        improvementIconEl.style.color = "var(--accent-rose)";
+        improvementIconEl.style.background = "rgba(244, 63, 94, 0.1)";
+        improvementIconEl.innerHTML = `<i data-lucide="trending-down"></i>`;
+      } else {
+        improvementTextEl.innerText = `ثبات في المستوى مقارنة بيوم أمس ⚖️`;
+        improvementTextEl.style.color = "var(--text-secondary)";
+        improvementIconEl.style.color = "var(--text-secondary)";
+        improvementIconEl.style.background = "rgba(148, 163, 184, 0.1)";
+        improvementIconEl.innerHTML = `<i data-lucide="minus"></i>`;
+      }
+    }
+
+    // 2. Weekly comparison (Last 7 days vs Previous 7 days)
+    const last7 = records.slice(0, 7);
+    const prev7 = records.slice(7, 14);
+    const thisWeekAvg = last7.reduce((acc, r) => acc + calculateScore(r), 0) / last7.length;
+    const weeklyCompEl = document.getElementById("weeklyComparisonText");
+    
+    if (prev7.length === 0) {
+      weeklyCompEl.innerText = `معدل نقاطك لهذا الأسبوع هو ${thisWeekAvg.toFixed(1)} نقطة من 100.`;
+    } else {
+      const prevWeekAvg = prev7.reduce((acc, r) => acc + calculateScore(r), 0) / prev7.length;
+      const diff = thisWeekAvg - prevWeekAvg;
+      weeklyCompEl.innerText = `معدل الأسبوع الحالي ${thisWeekAvg.toFixed(1)} مقارنة بـ ${prevWeekAvg.toFixed(1)} الأسبوع الماضي (${diff >= 0 ? '+' : ''}${diff.toFixed(1)} نقاط)`;
+    }
+
+    // 3. Monthly comparison (Last 30 days)
+    const monthlyCompEl = document.getElementById("monthlyComparisonText");
+    const thisMonthAvg = records.reduce((acc, r) => acc + calculateScore(r), 0) / records.length;
+    monthlyCompEl.innerText = `معدل نقاطك لآخر 30 يوماً هو ${thisMonthAvg.toFixed(1)} نقطة من 100.`;
+
+    // Render chart
+    renderChart(records.slice(0, 7).reverse());
 
   } catch (err) {
     console.error("Error loading report:", err);
@@ -343,6 +537,55 @@ async function loadReport() {
     `;
     lucide.createIcons();
   }
+}
+
+function renderChart(records) {
+  const labels = records.map(r => r.date.slice(5)); // MM-DD
+  const values = records.map(r => calculateScore(r));
+
+  const ctx = document.getElementById("healthProgressChart").getContext("2d");
+  const isDark = document.body.classList.contains("dark-theme");
+  const gridColor = isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(14, 165, 233, 0.12)";
+  const labelColor = isDark ? "#94a3b8" : "#475569";
+
+  new Chart(ctx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [{
+        label: "نقاط الصحة العامة",
+        data: values,
+        borderColor: "var(--primary)",
+        backgroundColor: "var(--primary-glow)",
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: "var(--primary)",
+        pointBorderColor: "#fff",
+        pointHoverRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: gridColor },
+          ticks: { color: labelColor, font: { family: "Cairo", size: 10 } }
+        },
+        y: {
+          grid: { color: gridColor },
+          ticks: { color: labelColor, font: { family: "Cairo", size: 10 } },
+          suggestedMax: 100,
+          suggestedMin: 0
+        }
+      }
+    }
+  });
 }
 
 function renderEmptyState() {
@@ -403,11 +646,58 @@ function renderReportContent(bmi, bmiClass, bmiColor, hydration, waterVal, sleep
         </div>
       </div>
     </div>
+
+    <!-- Health Score Progress Line Chart -->
+    <div class="chart-card" style="margin-top: 20px;">
+      <div class="chart-title">
+        <i data-lucide="line-chart"></i>
+        <span>تطور نقاط الصحة العامة (آخر 7 أيام)</span>
+      </div>
+      <canvas id="healthProgressChart" height="180"></canvas>
+    </div>
+
+    <!-- Comparative Comparison Cards -->
+    <div class="report-section-title" style="margin: 25px 0 10px 0; font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px;">
+      <i data-lucide="git-compare" style="color: var(--primary);"></i>
+      <span>مقارنات وتحسن الصحة</span>
+    </div>
+    <div class="comparison-grid" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+      <div class="box">
+        <div class="box-icon" style="background: rgba(14, 165, 233, 0.1); color: #0ea5e9;">
+          <i data-lucide="calendar"></i>
+        </div>
+        <div class="box-content">
+          <div class="box-title">المقارنة الأسبوعية</div>
+          <span class="box-sub" style="font-size: 13px; color: var(--text-primary); font-weight: 600;" id="weeklyComparisonText">جاري الحساب...</span>
+        </div>
+      </div>
+      
+      <div class="box">
+        <div class="box-icon" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;">
+          <i data-lucide="calendar-range"></i>
+        </div>
+        <div class="box-content">
+          <div class="box-title">المقارنة الشهرية</div>
+          <span class="box-sub" style="font-size: 13px; color: var(--text-primary); font-weight: 600;" id="monthlyComparisonText">جاري الحساب...</span>
+        </div>
+      </div>
+
+      <div class="box">
+        <div id="improvementIcon" class="box-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+          <i data-lucide="trending-up"></i>
+        </div>
+        <div class="box-content">
+          <div class="box-title">متابعة التحسن اليومي</div>
+          <span class="box-sub" style="font-size: 13px; font-weight: 700;" id="improvementComparisonText">جاري الحساب...</span>
+        </div>
+      </div>
+    </div>
   `;
   lucide.createIcons();
 }
 
 loadReport();
+window.updateThemeIcon();
 </script>
 
 <script>

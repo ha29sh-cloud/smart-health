@@ -18,15 +18,43 @@
 
 <style>
 :root {
+  --primary: #0284c7; /* light medical blue */
+  --primary-glow: rgba(2, 132, 199, 0.2);
+  --bg: #f0f9ff;
+  --card-bg: #ffffff;
+  --border: rgba(14, 165, 233, 0.15);
+  --box-bg: #f8fafc;
+  --box-hover-bg: #f0f9ff;
+  --text-primary: #0f172a;
+  --text-secondary: #0284c7;
+  --text-muted: #64748b;
+  --accent-emerald: #10b981;
+  --accent-rose: #f43f5e;
+  --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+  --orb-1: rgba(14, 165, 233, 0.15);
+  --orb-2: rgba(34, 197, 94, 0.1);
+  --gauge-track: rgba(14, 165, 233, 0.22);
+  --shadow: 0 10px 30px rgba(2, 132, 199, 0.08);
+}
+
+body.dark-theme {
   --primary: #4f46e5;
   --primary-glow: rgba(79, 70, 229, 0.4);
   --bg: #0f172a;
-  --card-bg: rgba(30, 41, 59, 0.7);
+  --card-bg: rgba(30, 41, 59, 0.75);
   --border: rgba(255, 255, 255, 0.08);
+  --box-bg: rgba(15, 23, 42, 0.4);
+  --box-hover-bg: rgba(15, 23, 42, 0.6);
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
+  --text-muted: #64748b;
   --accent-emerald: #10b981;
   --accent-rose: #f43f5e;
+  --bg-gradient: radial-gradient(circle at top right, #1e1b4b 0%, #0f172a 100%);
+  --orb-1: rgba(79, 70, 229, 0.35);
+  --orb-2: rgba(16, 185, 129, 0.2);
+  --gauge-track: rgba(255, 255, 255, 0.1);
+  --shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 * {
@@ -37,7 +65,7 @@
 
 body {
   font-family: "Cairo", sans-serif;
-  background: radial-gradient(circle at top right, #1e1b4b 0%, var(--bg) 100%);
+  background: var(--bg-gradient);
   color: var(--text-primary);
   min-height: 100vh;
   padding: 20px 20px 80px 20px;
@@ -57,14 +85,14 @@ body::before, body::after {
 body::before {
   width: 250px;
   height: 250px;
-  background: rgba(79, 70, 229, 0.25);
+  background: var(--orb-1);
   top: 10%;
   right: 10%;
 }
 body::after {
   width: 200px;
   height: 200px;
-  background: rgba(16, 185, 129, 0.15);
+  background: var(--orb-2);
   bottom: 10%;
   left: 10%;
 }
@@ -78,7 +106,7 @@ body::after {
   border: 1px solid var(--border);
   padding: 25px;
   border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow);
   z-index: 10;
   animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
@@ -98,7 +126,25 @@ body::after {
 h2 {
   font-size: 22px;
   font-weight: 800;
-  color: #fff;
+  color: var(--text-primary);
+}
+
+.theme-toggle-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+.theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
 }
 
 .logout-btn {
@@ -139,14 +185,14 @@ h2 {
 
 .health-gauge-bg {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.05);
-  stroke-width: 8;
+  stroke: var(--gauge-track);
+  stroke-width: 14;
 }
 
 .health-gauge-fill {
   fill: none;
   stroke: url(#healthGrad);
-  stroke-width: 8;
+  stroke-width: 14;
   stroke-linecap: round;
   stroke-dasharray: 440;
   stroke-dashoffset: 440;
@@ -164,15 +210,14 @@ h2 {
 
 .health-percent {
   font-size: 32px;
-  color: #fff;
+  color: var(--text-primary);
   font-weight: 900;
   line-height: 1.1;
-  text-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
 }
 
 .health-label {
   font-size: 11px;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   text-transform: uppercase;
   margin-top: 4px;
 }
@@ -185,7 +230,7 @@ h2 {
 }
 
 .box {
-  background: rgba(15, 23, 42, 0.4);
+  background: var(--box-bg);
   border: 1px solid var(--border);
   padding: 16px;
   border-radius: 16px;
@@ -196,8 +241,8 @@ h2 {
 }
 
 .box:hover {
-  background: rgba(15, 23, 42, 0.6);
-  border-color: rgba(255,255,255,0.15);
+  background: var(--box-hover-bg);
+  border-color: var(--primary);
 }
 
 .box-icon {
@@ -225,7 +270,7 @@ h2 {
 
 .box-title {
   font-size: 12px;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-weight: 600;
   margin-bottom: 2px;
 }
@@ -233,11 +278,11 @@ h2 {
 .box-value {
   font-size: 16px;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .chart-card {
-  background: rgba(15, 23, 42, 0.4);
+  background: var(--box-bg);
   border: 1px solid var(--border);
   padding: 18px;
   border-radius: 16px;
@@ -247,7 +292,7 @@ h2 {
 .chart-title {
   font-size: 14px;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-primary);
   margin-bottom: 12px;
   display: flex;
   align-items: center;
@@ -291,7 +336,7 @@ h2 {
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(15, 23, 42, 0.85);
+  background: var(--card-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid var(--border);
@@ -299,13 +344,14 @@ h2 {
   display: flex;
   justify-content: space-around;
   z-index: 100;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   text-decoration: none;
   font-size: 11px;
   font-weight: bold;
@@ -321,35 +367,125 @@ h2 {
 }
 
 .nav-item:hover {
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .nav-item.active {
-  color: #4da3ff;
-  text-shadow: 0 0 10px rgba(77, 163, 255, 0.3);
+  color: var(--primary);
+  text-shadow: 0 0 10px var(--primary-glow);
 }
 
 .nav-item.active i {
   transform: translateY(-2px);
 }
+
+/* Toast Notification Style */
+.toast-container {
+  position: fixed;
+  bottom: 80px; /* Adjusted so it is above bottom navigation */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  min-width: 280px;
+  max-width: 400px;
+  background: rgba(30, 41, 59, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  padding: 14px 20px;
+  border-radius: 16px;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast.success {
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15);
+}
+
+.toast.error {
+  border-color: rgba(244, 63, 94, 0.4);
+  box-shadow: 0 10px 30px rgba(244, 63, 94, 0.15);
+}
+
+.toast.warning {
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 10px 30px rgba(245, 158, 11, 0.15);
+}
+
+.toast.info {
+  border-color: rgba(14, 165, 233, 0.4);
+  box-shadow: 0 10px 30px rgba(14, 165, 233, 0.15);
+}
+
+.toast svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.toast.success svg { color: #10b981; }
+.toast.error svg { color: #f43f5e; }
+.toast.warning svg { color: #f59e0b; }
+.toast.info svg { color: #0ea5e9; }
 </style>
 </head>
 <body>
+<script>
+  (function() {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    if (savedTheme === "dark") {
+      document.body.classList.add("dark-theme");
+    }
+  })();
+</script>
 
 <div class="container">
   <div class="header-area">
+    <button id="themeToggleBtn" class="theme-toggle-btn" onclick="window.toggleTheme()">
+      <i data-lucide="moon"></i>
+    </button>
     <h2>لوحة التحكم</h2>
     <button class="logout-btn" onclick="logout()" title="تسجيل الخروج">
       <i data-lucide="log-out"></i>
     </button>
   </div>
 
+  <div class="user-greeting" style="margin-bottom: 20px; font-weight: bold; font-size: 14px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 4px; border-bottom: 1px dashed var(--border); padding-bottom: 12px;">
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <i data-lucide="sparkles" style="width: 16px; height: 16px; color: var(--primary);"></i>
+      <span id="userNameGreeting">مرحباً بك في صحتي الذكية! 👋</span>
+    </div>
+    <span style="font-size: 13px; font-weight: 600; color: var(--primary); margin-top: 4px;">صحتك تبدأ من عاداتك اليومية</span>
+  </div>
+
   <div class="health-gauge-container">
     <svg class="health-gauge-svg" viewBox="0 0 160 160">
       <defs>
         <linearGradient id="healthGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#4f46e5" />
-          <stop offset="100%" stop-color="#10b981" />
+          <stop offset="0%" stop-color="var(--primary)" />
+          <stop offset="100%" stop-color="var(--accent-emerald)" />
         </linearGradient>
       </defs>
       <circle class="health-gauge-bg" cx="80" cy="80" r="70" />
@@ -368,7 +504,7 @@ h2 {
       </div>
       <div class="box-content">
         <div class="box-title">نقاط اليوم</div>
-        <div class="box-value"><span id="points">0</span> / 70</div>
+        <div class="box-value"><span id="points">0</span> / 100</div>
       </div>
     </div>
 
@@ -426,6 +562,73 @@ if (!uid) {
   window.location.href = "index.html";
 }
 
+// Set custom greeting
+const displayName = localStorage.getItem("displayName") || "المستخدم القدير";
+const nameGreetingEl = document.getElementById("userNameGreeting");
+if (nameGreetingEl) {
+  nameGreetingEl.innerText = `مرحباً بك، ${displayName}! 👋`;
+}
+
+window.showToast = function (message, type = "success") {
+  let container = document.getElementById("toastContainer");
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "toastContainer";
+    container.className = "toast-container";
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  
+  let icon = "info";
+  if (type === "success") icon = "check-circle";
+  else if (type === "error") icon = "alert-circle";
+  else if (type === "warning") icon = "alert-triangle";
+
+  toast.innerHTML = `
+    <i data-lucide="${icon}"></i>
+    <span>${message}</span>
+  `;
+  
+  container.appendChild(toast);
+  
+  if (window.lucide) {
+    lucide.createIcons();
+  }
+
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 10);
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => {
+      toast.remove();
+      if (container.children.length === 0) {
+        container.remove();
+      }
+    }, 400);
+  }, 3500);
+};
+
+window.toggleTheme = function() {
+  const isDark = document.body.classList.toggle("dark-theme");
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+  window.updateThemeIcon();
+};
+
+window.updateThemeIcon = function() {
+  const btn = document.getElementById("themeToggleBtn");
+  if (btn) {
+    const isDark = document.body.classList.contains("dark-theme");
+    btn.innerHTML = `<i data-lucide="${isDark ? 'sun' : 'moon'}"></i>`;
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  }
+};
+
 async function loadDashboard() {
   const today = new Date().toISOString().split("T")[0];
 
@@ -443,6 +646,11 @@ async function loadDashboard() {
       setGaugePercent(0);
       lucide.createIcons();
       loadWeeklyChart(uid);
+      
+      // Smart Reminder to fill data
+      setTimeout(() => {
+        window.showToast("لا تنسى إدخال بياناتك الصحية اليوم لتتبع تقدمك! 📝", "info");
+      }, 1500);
       return;
     }
 
@@ -452,24 +660,78 @@ async function loadDashboard() {
     document.getElementById("statusIcon").innerHTML = '<i data-lucide="check-circle-2" style="color: #10b981;"></i>';
     document.getElementById("statusIcon").style.background = "rgba(16, 185, 129, 0.1)";
 
-    // Calculate points
+    // Calculate points (max 100)
     let points = 0;
-    if (d.water >= 2) points += 10;
-    if (d.sleep >= 7) points += 10;
-    if (d.sitting <= 5) points += 10;
-    if (d.smoker === "no") points += 20;
+    
+    // 1. Sleep (max 15 points)
+    if (d.sleep >= 7) points += 15;
+    else if (d.sleep >= 6) points += 11;
+    else if (d.sleep >= 5) points += 7;
+    else points += 3;
 
-    const bmi = d.weight / (d.height/100)**2;
-    if (bmi >= 18.5 && bmi <= 24.9) points += 20;
+    // 2. Water (max 15 points)
+    if (d.water >= 3) points += 15;
+    else if (d.water >= 2) points += 11;
+    else if (d.water >= 1.5) points += 7;
+    else points += 3;
+
+    // 3. Sitting (max 10 points)
+    if (d.sitting <= 4) points += 10;
+    else if (d.sitting <= 6) points += 7;
+    else points += 3;
+
+    // 4. Smoker (max 10 points)
+    if (d.smoker === "no") points += 10;
+    else points += 2;
+
+    // 5. Daily Activity (max 15 points)
+    if (d.activity === "high") points += 15;
+    else if (d.activity === "medium") points += 11;
+    else points += 5; // low or missing
+
+    // 6. Food Quality (max 20 points)
+    const foodRating = d.food !== undefined ? Number(d.food) : 5;
+    points += foodRating * 2;
+
+    // 7. Mental State (max 15 points)
+    if (d.mood === "happy") points += 15;
+    else if (d.mood === "neutral") points += 11;
+    else points += 5; // sad or missing
 
     document.getElementById("points").innerText = points;
 
-    const healthPercent = Math.round((points / 70) * 100);
+    const healthPercent = Math.round(points); // out of 100, so it matches percent directly
     document.getElementById("health").innerText = healthPercent + "%";
     setGaugePercent(healthPercent);
 
     lucide.createIcons();
     loadWeeklyChart(uid);
+
+    // Smart notifications
+    setTimeout(() => {
+      let reminders = [];
+      if (d.water < 2) {
+        reminders.push({ text: "لم تشرب كمية كافية من الماء اليوم. تناول كوباً من الماء الآن! 💧", type: "warning" });
+      }
+      if (d.sleep < 6) {
+        reminders.push({ text: "ساعات نومك كانت منخفضة. احرص على النوم مبكراً لراحة جسمك! 😴", type: "warning" });
+      }
+      if (d.sitting > 6) {
+        reminders.push({ text: "لقد جلست لفترة طويلة اليوم. قف وتمدد لتنشيط دورتك الدموية! 🚶‍♂️", type: "warning" });
+      }
+      if (d.mood === "sad") {
+        reminders.push({ text: "خذ نفساً عميقاً... صحتك النفسية لا تقل أهمية عن صحتك الجسدية. 🧘‍♂️", type: "info" });
+      } else if (d.mood === "happy" && points >= 80) {
+        reminders.push({ text: "يومك ممتاز وصحتك في أفضل حال! استمر على هذا الأداء الرائع! 🌟", type: "success" });
+      }
+      
+      reminders.forEach((r, idx) => {
+        setTimeout(() => {
+          window.showToast(r.text, r.type);
+        }, idx * 4000);
+      });
+    }, 1000);
+
   } catch (err) {
     console.error("Error loading dashboard:", err);
     document.getElementById("status").innerText = "فشل الاتصال بقاعدة البيانات. يرجى تفعيل Firestore.";
@@ -486,6 +748,7 @@ async function loadDashboard() {
 
 function setGaugePercent(percent) {
   const circle = document.getElementById("gaugeFill");
+  if (!circle) return;
   const radius = 70;
   const circumference = 2 * Math.PI * radius;
   
@@ -511,6 +774,10 @@ async function loadWeeklyChart(uid) {
   }
 
   const ctx = document.getElementById("chart").getContext("2d");
+  const isDark = document.body.classList.contains("dark-theme");
+  const gridColor = isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(14, 165, 233, 0.12)";
+  const labelColor = isDark ? "#94a3b8" : "#475569";
+
   new Chart(ctx, {
     type: "line",
     data: {
@@ -518,12 +785,12 @@ async function loadWeeklyChart(uid) {
       datasets: [{
         label: "ساعات النوم",
         data: values,
-        borderColor: "#6366f1",
-        backgroundColor: "rgba(99, 102, 241, 0.15)",
+        borderColor: "var(--primary)",
+        backgroundColor: "var(--primary-glow)",
         borderWidth: 3,
         fill: true,
         tension: 0.4,
-        pointBackgroundColor: "#6366f1",
+        pointBackgroundColor: "var(--primary)",
         pointBorderColor: "#fff",
         pointHoverRadius: 6
       }]
@@ -537,12 +804,12 @@ async function loadWeeklyChart(uid) {
       },
       scales: {
         x: {
-          grid: { color: "rgba(255, 255, 255, 0.05)" },
-          ticks: { color: "#94a3b8", font: { family: "Cairo", size: 10 } }
+          grid: { color: gridColor },
+          ticks: { color: labelColor, font: { family: "Cairo", size: 10 } }
         },
         y: {
-          grid: { color: "rgba(255, 255, 255, 0.05)" },
-          ticks: { color: "#94a3b8", font: { family: "Cairo", size: 10 } },
+          grid: { color: gridColor },
+          ticks: { color: labelColor, font: { family: "Cairo", size: 10 } },
           suggestedMax: 10,
           suggestedMin: 0
         }
@@ -557,6 +824,7 @@ window.logout = function() {
 };
 
 loadDashboard();
+window.updateThemeIcon();
 </script>
 
 <script>
