@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>النصائح الصحية - صحتي الذكية</title>
+
+<!-- Cairo Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+:root {
+  --primary: #4f46e5;
+  --bg: #0f172a;
+  --card-bg: rgba(30, 41, 59, 0.7);
+  --border: rgba(255, 255, 255, 0.08);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-emerald: #10b981;
+  --accent-rose: #f43f5e;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Cairo", sans-serif;
+  background: radial-gradient(circle at top right, #1e1b4b 0%, var(--bg) 100%);
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding: 20px 20px 80px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+}
+
+body::before, body::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: 0;
+}
+body::before {
+  width: 250px;
+  height: 250px;
+  background: rgba(79, 70, 229, 0.25);
+  top: 10%;
+  right: 10%;
+}
+body::after {
+  width: 200px;
+  height: 200px;
+  background: rgba(16, 185, 129, 0.15);
+  bottom: 10%;
+  left: 10%;
+}
+
+.container {
+  max-width: 480px;
+  width: 100%;
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  padding: 25px;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 15px;
+}
+
+.tip {
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid var(--border);
+  padding: 16px;
+  border-radius: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: all 0.3s;
+}
+
+.tip:hover {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(255,255,255,0.15);
+}
+
+.tip-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tip-content {
+  flex: 1;
+  font-size: 15px;
+  color: #fff;
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+/* Empty state design */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.empty-state i {
+  width: 64px;
+  height: 64px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  opacity: 0.6;
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+  font-size: 15px;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+  color: #fff;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 700;
+  transition: all 0.3s;
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(79, 70, 229, 0.5);
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-around;
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: bold;
+  gap: 4px;
+  transition: color 0.3s;
+  width: 60px;
+}
+
+.nav-item i {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s;
+}
+
+.nav-item:hover {
+  color: #fff;
+}
+
+.nav-item.active {
+  color: #4da3ff;
+  text-shadow: 0 0 10px rgba(77, 163, 255, 0.3);
+}
+
+.nav-item.active i {
+  transform: translateY(-2px);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>نصائح صحية اليوم</h2>
+
+  <!-- Content to be loaded dynamically -->
+  <div id="content">
+    <div style="text-align: center; padding: 40px 0;">
+      <p style="color: var(--text-secondary);">جاري توليد النصائح...</p>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a href="dashboard.html" class="nav-item">
+    <i data-lucide="layout-dashboard"></i>
+    الرئيسية
+  </a>
+  <a href="analysis.html" class="nav-item">
+    <i data-lucide="brain-circuit"></i>
+    التحليل
+  </a>
+  <a href="reports.html" class="nav-item">
+    <i data-lucide="clipboard-list"></i>
+    التقارير
+  </a>
+  <a href="tips.html" class="nav-item active">
+    <i data-lucide="sparkles"></i>
+    النصائح
+  </a>
+</div>
+
+<script type="module">
+import { db } from "./firebase-config.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const uid = localStorage.getItem("uid");
+if (!uid) {
+  window.location.href = "index.html";
+}
+
+async function loadTips() {
+  const today = new Date().toISOString().split("T")[0];
+
+  try {
+    const snap = await getDoc(doc(db, "users", uid, "days", today));
+
+    if (!snap.exists()) {
+      renderEmptyState();
+      return;
+    }
+
+    const d = snap.data();
+    const tips = [];
+
+    if (d.sleep < 6) {
+      tips.push({ text: "نم 7–8 ساعات يومياً لتحسين طاقتك وصحتك البدنية والذهنية.", icon: "moon", color: "#f59e0b", bg: "rgba(245, 158, 11, 0.1)" });
+    }
+    if (d.water < 2) {
+      tips.push({ text: "اشرب 2–3 لتر ماء يومياً لترطيب خلايا الجسم والمحافظة على النشاط.", icon: "droplet", color: "#38bdf8", bg: "rgba(56, 189, 248, 0.1)" });
+    }
+    if (d.sitting > 6) {
+      tips.push({ text: "تحرك كل ساعة لمدة 5 دقائق على الأقل لتنشيط الدورة الدموية وتجنب آلام الظهر.", icon: "footprints", color: "#a78bfa", bg: "rgba(167, 139, 250, 0.1)" });
+    }
+    if (d.smoker === "yes") {
+      tips.push({ text: "الإقلاع عن التدخين يحسن من كفاءة الرئتين وصحة القلب والجسم خلال أسابيع معدودة.", icon: "ban", color: "#f43f5e", bg: "rgba(244, 63, 94, 0.1)" });
+    }
+
+    if (tips.length === 0) {
+      tips.push({ text: "أحسنت! عاداتك اليومية ممتازة ومثالية جداً، استمر على هذا النمط الصحي الرائع.", icon: "award", color: "#10b981", bg: "rgba(16, 185, 129, 0.1)" });
+    }
+
+    renderTipsContent(tips);
+
+  } catch (err) {
+    console.error("Error loading tips:", err);
+    document.getElementById("content").innerHTML = `
+      <div class="empty-state">
+        <i data-lucide="alert-triangle" style="color: #f43f5e;"></i>
+        <p style="color: #f43f5e; font-weight: bold; margin-bottom: 10px;">فشل الاتصال بقاعدة البيانات</p>
+        <p style="font-size: 13px; max-width: 320px; margin: 0 auto 20px auto;">يرجى التأكد من تفعيل قواعد البيانات Firestore Database في لوحة تحكم Firebase وتحديث الصفحة.</p>
+        <a href="https://console.firebase.google.com" target="_blank" class="btn-primary" style="padding: 10px 20px; font-size: 13px;">
+          انتقال إلى لوحة Firebase
+        </a>
+      </div>
+    `;
+    lucide.createIcons();
+  }
+}
+
+function renderEmptyState() {
+  const container = document.getElementById("content");
+  container.innerHTML = `
+    <div class="empty-state">
+      <i data-lucide="clipboard-x"></i>
+      <p>لم يتم إدخال بيانات اليوم حتى الآن. يرجى تزويدنا ببياناتك اليومية لنتمكن من تقديم نصائح صحية مخصصة لك.</p>
+      <a href="input.html" class="btn-primary">
+        <i data-lucide="plus-circle" style="width: 20px; height: 20px; margin-left: 8px; vertical-align: middle;"></i>
+        إدخال بيانات اليوم
+      </a>
+    </div>
+  `;
+  lucide.createIcons();
+}
+
+function renderTipsContent(tips) {
+  const container = document.getElementById("content");
+  
+  let tipsHTML = '<div class="tips-list">';
+  tips.forEach(t => {
+    tipsHTML += `
+      <div class="tip">
+        <div class="tip-icon" style="background: ${t.bg}; color: ${t.color};">
+          <i data-lucide="${t.icon}"></i>
+        </div>
+        <div class="tip-content">
+          ${t.text}
+        </div>
+      </div>
+    `;
+  });
+  tipsHTML += '</div>';
+
+  container.innerHTML = tipsHTML;
+  lucide.createIcons();
+}
+
+loadTips();
+</script>
+
+<script>
+  lucide.createIcons();
+</script>
+</body>
+</html>

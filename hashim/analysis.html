@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>التحليل الذكي - صحتي الذكية</title>
+
+<!-- Cairo Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+:root {
+  --primary: #4f46e5;
+  --bg: #0f172a;
+  --card-bg: rgba(30, 41, 59, 0.7);
+  --border: rgba(255, 255, 255, 0.08);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-emerald: #10b981;
+  --accent-rose: #f43f5e;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Cairo", sans-serif;
+  background: radial-gradient(circle at top right, #1e1b4b 0%, var(--bg) 100%);
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding: 20px 20px 80px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+}
+
+body::before, body::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: 0;
+}
+body::before {
+  width: 250px;
+  height: 250px;
+  background: rgba(79, 70, 229, 0.25);
+  top: 10%;
+  right: 10%;
+}
+body::after {
+  width: 200px;
+  height: 200px;
+  background: rgba(16, 185, 129, 0.15);
+  bottom: 10%;
+  left: 10%;
+}
+
+.container {
+  max-width: 480px;
+  width: 100%;
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  padding: 25px;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.health-gauge-container {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  margin: 10px auto 25px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.health-gauge-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.health-gauge-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.05);
+  stroke-width: 8;
+}
+
+.health-gauge-fill {
+  fill: none;
+  stroke: url(#totalGrad);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 440;
+  stroke-dashoffset: 440;
+  transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.health-score-text {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.health-percent {
+  font-size: 32px;
+  color: #fff;
+  font-weight: 900;
+  line-height: 1.1;
+  text-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
+}
+
+.health-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.risk-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 15px;
+}
+
+.box {
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid var(--border);
+  padding: 16px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.3s;
+}
+
+.box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+}
+
+.box-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #fff;
+}
+
+.box-title i {
+  width: 18px;
+  height: 18px;
+}
+
+.box-title.fatigue i { color: #6366f1; }
+.box-title.obesity i { color: #f59e0b; }
+.box-title.diabetes i { color: #f43f5e; }
+.box-title.pressure i { color: #8b5cf6; }
+
+.box-value {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 0%;
+}
+
+.progress-bar-fill.fatigue { background: linear-gradient(90deg, #6366f1, #818cf8); }
+.progress-bar-fill.obesity { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.progress-bar-fill.diabetes { background: linear-gradient(90deg, #f43f5e, #fb7185); }
+.progress-bar-fill.pressure { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+
+/* Empty state design */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.empty-state i {
+  width: 64px;
+  height: 64px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  opacity: 0.6;
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+  font-size: 15px;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+  color: #fff;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 700;
+  transition: all 0.3s;
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(79, 70, 229, 0.5);
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-around;
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: bold;
+  gap: 4px;
+  transition: color 0.3s;
+  width: 60px;
+}
+
+.nav-item i {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s;
+}
+
+.nav-item:hover {
+  color: #fff;
+}
+
+.nav-item.active {
+  color: #4da3ff;
+  text-shadow: 0 0 10px rgba(77, 163, 255, 0.3);
+}
+
+.nav-item.active i {
+  transform: translateY(-2px);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>التحليل الذكي</h2>
+
+  <!-- Content to be loaded dynamically -->
+  <div id="content">
+    <div style="text-align: center; padding: 40px 0;">
+      <p style="color: var(--text-secondary);">جاري تحليل البيانات...</p>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a href="dashboard.html" class="nav-item">
+    <i data-lucide="layout-dashboard"></i>
+    الرئيسية
+  </a>
+  <a href="analysis.html" class="nav-item active">
+    <i data-lucide="brain-circuit"></i>
+    التحليل
+  </a>
+  <a href="reports.html" class="nav-item">
+    <i data-lucide="clipboard-list"></i>
+    التقارير
+  </a>
+  <a href="tips.html" class="nav-item">
+    <i data-lucide="sparkles"></i>
+    النصائح
+  </a>
+</div>
+
+<script type="module">
+import { db } from "./firebase-config.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const uid = localStorage.getItem("uid");
+if (!uid) {
+  window.location.href = "index.html";
+}
+
+async function loadAnalysis() {
+  const today = new Date().toISOString().split("T")[0];
+
+  try {
+    const snap = await getDoc(doc(db, "users", uid, "days", today));
+
+    if (!snap.exists()) {
+      renderEmptyState();
+      return;
+    }
+
+    const d = snap.data();
+
+    // Calculations
+    const fatigue = Math.min(100, Math.max(0, 100 - d.sleep * 12));
+    const obesity = Math.min(100, Math.max(0, (d.weight / (d.height/100)**2) * 4));
+    const diabetes = d.smoker === "yes" ? 60 : 20;
+    const pressure = Math.min(100, Math.max(0, d.sitting * 10));
+
+    const total = Math.max(0, Math.round(100 - ((fatigue + obesity + diabetes + pressure) / 4)));
+
+    renderAnalysisContent(total, fatigue, obesity, diabetes, pressure);
+    
+    // Set gauge and progress animations
+    setTimeout(() => {
+      setGaugePercent(total);
+      document.getElementById("fatigueBar").style.width = fatigue.toFixed(0) + "%";
+      document.getElementById("obesityBar").style.width = obesity.toFixed(0) + "%";
+      document.getElementById("diabetesBar").style.width = diabetes.toFixed(0) + "%";
+      document.getElementById("pressureBar").style.width = pressure.toFixed(0) + "%";
+    }, 100);
+
+  } catch (err) {
+    console.error("Error loading analysis:", err);
+    document.getElementById("content").innerHTML = `
+      <div class="empty-state">
+        <i data-lucide="alert-triangle" style="color: #f43f5e;"></i>
+        <p style="color: #f43f5e; font-weight: bold; margin-bottom: 10px;">فشل الاتصال بقاعدة البيانات</p>
+        <p style="font-size: 13px; max-width: 320px; margin: 0 auto 20px auto;">يرجى التأكد من تفعيل قواعد البيانات Firestore Database في لوحة تحكم Firebase وتحديث الصفحة.</p>
+        <a href="https://console.firebase.google.com" target="_blank" class="btn-primary" style="padding: 10px 20px; font-size: 13px;">
+          انتقال إلى لوحة Firebase
+        </a>
+      </div>
+    `;
+    lucide.createIcons();
+  }
+}
+
+function setGaugePercent(percent) {
+  const circle = document.getElementById("gaugeFill");
+  if (!circle) return;
+  const radius = 70;
+  const circumference = 2 * Math.PI * radius;
+  
+  circle.style.strokeDasharray = circumference;
+  const offset = circumference - (percent / 100) * circumference;
+  circle.style.strokeDashoffset = offset;
+}
+
+function renderEmptyState() {
+  const container = document.getElementById("content");
+  container.innerHTML = `
+    <div class="empty-state">
+      <i data-lucide="clipboard-x"></i>
+      <p>لم يتم إدخال بيانات اليوم حتى الآن. يرجى تزويدنا ببياناتك اليومية لنتمكن من إجراء التحليل الذكي لحالتك الصحية.</p>
+      <a href="input.html" class="btn-primary">
+        <i data-lucide="plus-circle" style="width: 20px; height: 20px; margin-left: 8px; vertical-align: middle;"></i>
+        إدخال بيانات اليوم
+      </a>
+    </div>
+  `;
+  lucide.createIcons();
+}
+
+function renderAnalysisContent(total, fatigue, obesity, diabetes, pressure) {
+  const container = document.getElementById("content");
+  container.innerHTML = `
+    <div class="health-gauge-container">
+      <svg class="health-gauge-svg" viewBox="0 0 160 160">
+        <defs>
+          <linearGradient id="totalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#3b82f6" />
+            <stop offset="100%" stop-color="#10b981" />
+          </linearGradient>
+        </defs>
+        <circle class="health-gauge-bg" cx="80" cy="80" r="70" />
+        <circle class="health-gauge-fill" id="gaugeFill" cx="80" cy="80" r="70" />
+      </svg>
+      <div class="health-score-text">
+        <span class="health-percent" id="total">${total}%</span>
+        <span class="health-label">النتيجة العامة</span>
+      </div>
+    </div>
+
+    <div class="risk-list">
+      <div class="box">
+        <div class="box-header">
+          <div class="box-title fatigue">
+            <i data-lucide="battery-charging"></i>
+            <span>إرهاق الجسم</span>
+          </div>
+          <span class="box-value">${fatigue.toFixed(0)}%</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill fatigue" id="fatigueBar"></div>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-header">
+          <div class="box-title obesity">
+            <i data-lucide="activity"></i>
+            <span>احتمالية السمنة</span>
+          </div>
+          <span class="box-value">${obesity.toFixed(0)}%</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill obesity" id="obesityBar"></div>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-header">
+          <div class="box-title diabetes">
+            <i data-lucide="droplet"></i>
+            <span>احتمالية السكري</span>
+          </div>
+          <span class="box-value">${diabetes.toFixed(0)}%</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill diabetes" id="diabetesBar"></div>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-header">
+          <div class="box-title pressure">
+            <i data-lucide="trending-up"></i>
+            <span>احتمالية الضغط</span>
+          </div>
+          <span class="box-value">${pressure.toFixed(0)}%</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill pressure" id="pressureBar"></div>
+        </div>
+      </div>
+    </div>
+  `;
+  lucide.createIcons();
+}
+
+loadAnalysis();
+</script>
+
+<script>
+  lucide.createIcons();
+</script>
+</body>
+</html>
+
