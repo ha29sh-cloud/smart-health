@@ -548,6 +548,14 @@ function renderChart(records) {
   const gridColor = isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(14, 165, 233, 0.12)";
   const labelColor = isDark ? "#94a3b8" : "#475569";
 
+  const chartColor = isDark ? "#818cf8" : "#0284c7";
+  const pointBorder = isDark ? "#1e293b" : "#ffffff";
+
+  // Create gradient fill
+  const gradient = ctx.createLinearGradient(0, 0, 0, 180);
+  gradient.addColorStop(0, isDark ? "rgba(129, 140, 248, 0.3)" : "rgba(2, 132, 199, 0.25)");
+  gradient.addColorStop(1, isDark ? "rgba(129, 140, 248, 0.02)" : "rgba(2, 132, 199, 0.02)");
+
   new Chart(ctx, {
     type: "line",
     data: {
@@ -555,14 +563,19 @@ function renderChart(records) {
       datasets: [{
         label: "نقاط الصحة العامة",
         data: values,
-        borderColor: "var(--primary)",
-        backgroundColor: "var(--primary-glow)",
+        borderColor: chartColor,
+        backgroundColor: gradient,
         borderWidth: 3,
         fill: true,
         tension: 0.4,
-        pointBackgroundColor: "var(--primary)",
-        pointBorderColor: "#fff",
-        pointHoverRadius: 6
+        pointBackgroundColor: chartColor,
+        pointBorderColor: pointBorder,
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: chartColor,
+        pointHoverBorderWidth: 3
       }]
     },
     options: {
@@ -570,16 +583,26 @@ function renderChart(records) {
       plugins: {
         legend: {
           display: false
+        },
+        tooltip: {
+          backgroundColor: isDark ? "rgba(30, 41, 59, 0.9)" : "rgba(15, 23, 42, 0.88)",
+          titleColor: "#f1f5f9",
+          bodyColor: "#f1f5f9",
+          titleFont: { family: "Cairo", size: 12, weight: "bold" },
+          bodyFont: { family: "Cairo", size: 13 },
+          padding: 12,
+          cornerRadius: 12,
+          displayColors: false
         }
       },
       scales: {
         x: {
-          grid: { color: gridColor },
-          ticks: { color: labelColor, font: { family: "Cairo", size: 10 } }
+          grid: { color: gridColor, drawBorder: false },
+          ticks: { color: labelColor, font: { family: "Cairo", size: 11 } }
         },
         y: {
-          grid: { color: gridColor },
-          ticks: { color: labelColor, font: { family: "Cairo", size: 10 } },
+          grid: { color: gridColor, drawBorder: false },
+          ticks: { color: labelColor, font: { family: "Cairo", size: 11 } },
           suggestedMax: 100,
           suggestedMin: 0
         }

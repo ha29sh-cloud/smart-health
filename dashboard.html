@@ -395,16 +395,16 @@ h2 {
 .toast {
   min-width: 280px;
   max-width: 400px;
-  background: rgba(30, 41, 59, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   padding: 14px 20px;
   border-radius: 16px;
-  color: var(--text-primary);
+  color: #f1f5f9;
   font-weight: 600;
   font-size: 14px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -778,6 +778,15 @@ async function loadWeeklyChart(uid) {
   const gridColor = isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(14, 165, 233, 0.12)";
   const labelColor = isDark ? "#94a3b8" : "#475569";
 
+  const chartColor = isDark ? "#818cf8" : "#0284c7";
+  const chartGlow = isDark ? "rgba(129, 140, 248, 0.15)" : "rgba(2, 132, 199, 0.12)";
+  const pointBorder = isDark ? "#1e293b" : "#ffffff";
+
+  // Create gradient fill
+  const gradient = ctx.createLinearGradient(0, 0, 0, 180);
+  gradient.addColorStop(0, isDark ? "rgba(129, 140, 248, 0.3)" : "rgba(2, 132, 199, 0.25)");
+  gradient.addColorStop(1, isDark ? "rgba(129, 140, 248, 0.02)" : "rgba(2, 132, 199, 0.02)");
+
   new Chart(ctx, {
     type: "line",
     data: {
@@ -785,14 +794,19 @@ async function loadWeeklyChart(uid) {
       datasets: [{
         label: "ساعات النوم",
         data: values,
-        borderColor: "var(--primary)",
-        backgroundColor: "var(--primary-glow)",
+        borderColor: chartColor,
+        backgroundColor: gradient,
         borderWidth: 3,
         fill: true,
         tension: 0.4,
-        pointBackgroundColor: "var(--primary)",
-        pointBorderColor: "#fff",
-        pointHoverRadius: 6
+        pointBackgroundColor: chartColor,
+        pointBorderColor: pointBorder,
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: chartColor,
+        pointHoverBorderWidth: 3
       }]
     },
     options: {
@@ -800,16 +814,26 @@ async function loadWeeklyChart(uid) {
       plugins: {
         legend: {
           display: false
+        },
+        tooltip: {
+          backgroundColor: isDark ? "rgba(30, 41, 59, 0.9)" : "rgba(15, 23, 42, 0.88)",
+          titleColor: "#f1f5f9",
+          bodyColor: "#f1f5f9",
+          titleFont: { family: "Cairo", size: 12, weight: "bold" },
+          bodyFont: { family: "Cairo", size: 13 },
+          padding: 12,
+          cornerRadius: 12,
+          displayColors: false
         }
       },
       scales: {
         x: {
-          grid: { color: gridColor },
-          ticks: { color: labelColor, font: { family: "Cairo", size: 10 } }
+          grid: { color: gridColor, drawBorder: false },
+          ticks: { color: labelColor, font: { family: "Cairo", size: 11 } }
         },
         y: {
-          grid: { color: gridColor },
-          ticks: { color: labelColor, font: { family: "Cairo", size: 10 } },
+          grid: { color: gridColor, drawBorder: false },
+          ticks: { color: labelColor, font: { family: "Cairo", size: 11 } },
           suggestedMax: 10,
           suggestedMin: 0
         }
